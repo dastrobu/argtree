@@ -84,6 +84,7 @@ final class FlagTests: XCTestCase {
         ("testCustomPrefix", testCustomPrefix),
         ("testFlagNotParsableTwice", testFlagNotParsableTwice),
         ("testFlagParsing", testFlagParsing),
+        ("testFlagParsingTwice", testFlagParsingTwice),
         ("testUnexpectedFlagHandling", testUnexpectedFlagHandling),
     ]
 #endif

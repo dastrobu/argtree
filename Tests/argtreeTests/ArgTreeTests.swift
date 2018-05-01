@@ -184,8 +184,11 @@ final class ArgTreeTests: XCTestCase {
         ("testGeneratedHelpIgnoringFlagWithoutDescription", testGeneratedHelpIgnoringFlagWithoutDescription),
         ("testHelpLongFlag", testHelpLongFlag),
         ("testHelpShortFlag", testHelpShortFlag),
+        ("testReorderingFlags", testReorderingFlags),
         ("testShowNothingAsDefault", testShowNothingAsDefault),
         ("testShowUsageAsDefault", testShowUsageAsDefault),
+        ("testSimpleDemo", testSimpleDemo),
+        ("testVarArgsExample", testVarArgsExample),
     ]
 #endif
 }

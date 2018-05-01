@@ -12,7 +12,7 @@ internal func createTable(_ rows: [[String]]) -> String {
     }
 
     // set the last col count to zero, to avoid padding the last col
-    if let _ = colMaxCount.popLast() {
+    if colMaxCount.popLast() != nil {
         colMaxCount.append(0)
     }
 

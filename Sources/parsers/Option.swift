@@ -6,7 +6,6 @@ public enum OptionParseError<T>: Error {
     case unexpectedOption(option: String, atIndex: Int)
 }
 
-// TODO: implement multi options (one option can be passed several times)
 open class OptionParser<T>: ValueParser<T> {
     /** flag to indicate if passing an option more that once is an error */
     public var multiAllowed = false

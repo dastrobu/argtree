@@ -67,10 +67,12 @@ final class FlagTests: XCTestCase {
         let verboseFlag = Flag(longName: "verbose", shortName: "v")
         let argTree: ArgTree = ArgTree(parsers: [verboseFlag])
 
+        verboseFlag.values.removeAll()
         try! argTree.parse(arguments: ["foo", "-v"])
         var verbose = verboseFlag.values.first != nil
         XCTAssert(verbose)
 
+        verboseFlag.values.removeAll()
         try! argTree.parse(arguments: ["foo"])
         verbose = verboseFlag.values.first != nil
         XCTAssert(!verbose)

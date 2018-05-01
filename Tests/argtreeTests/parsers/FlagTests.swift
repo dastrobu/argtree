@@ -81,7 +81,6 @@ final class FlagTests: XCTestCase {
 #if !os(macOS)
     static var allTests = [
         ("testAccessingFlagLater", testAccessingFlagLater),
-        ("testCommandParsing", testCommandParsing),
         ("testCustomPrefix", testCustomPrefix),
         ("testFlagNotParsableTwice", testFlagNotParsableTwice),
         ("testFlagParsing", testFlagParsing),

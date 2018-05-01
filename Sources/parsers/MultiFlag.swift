@@ -10,8 +10,8 @@ public class MultiFlag: Parser, ParserNode, ParsePathSegment {
     public var stopToken: String?
 
     public init(shortPrefix: Character = "-",
-         stopToken: String? = "--",
-         parsers: [Flag] = []
+                stopToken: String? = "--",
+                parsers: [Flag] = []
     ) {
         self.stopToken = stopToken
         self.parsers = parsers

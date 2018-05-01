@@ -37,11 +37,11 @@ internal func createTable(_ rows: [[String]]) -> String {
 public class Help: Flag {
 
     public init(longName: String? = "help",
-         shortName: Character? = "h",
-         description: String? = "print this help",
-         longPrefix: String = "--",
-         shortPrefix: String = "-",
-         parsed: OnParsed?) {
+                shortName: Character? = "h",
+                description: String? = "print this help",
+                longPrefix: String = "--",
+                shortPrefix: String = "-",
+                parsed: OnParsed?) {
         super.init(longName: longName, shortName: shortName, description: description, parsed: parsed)
     }
 }

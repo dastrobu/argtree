@@ -72,6 +72,8 @@ if verbose {
 
 ### Help Text generation
 Help texts can be generated automatically (partially), detailed in [Automatic Help Flag](#automatic-help-flag).
+This is only true for global help. 
+Help on individual commands is not generated, can however, easily be implemented by adding a `Help` flag to the command.
 
 ## Parsers
 There are a variaty of parsers implemented to compose the parser tree. 

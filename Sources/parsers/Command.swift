@@ -5,7 +5,6 @@ public enum CommandParseError: Error {
 /**
  * command parser for sub-commands in the command tree
  */
-// TODO: generate help texts like for ArgTree
 open class Command: ValueParser<Bool>, ParserNode {
 
     fileprivate var parsers: [Parser] = []

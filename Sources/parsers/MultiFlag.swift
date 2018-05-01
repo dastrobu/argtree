@@ -9,7 +9,7 @@ public class MultiFlag: Parser, ParserNode, ParsePathSegment {
 
     public var stopToken: String?
 
-    init(shortPrefix: Character = "-",
+    public init(shortPrefix: Character = "-",
          stopToken: String? = "--",
          parsers: [Flag] = []
     ) {

@@ -101,14 +101,14 @@ public class Option: OptionParser<String> {
 }
 
 public class IntOption: OptionParser<Int> {
-    override init(longName: String? = nil,
-                  shortName: String? = nil,
-                  description: String? = nil,
-                  longPrefix: String = "--",
-                  shortPrefix: String = "-",
-                  multiAllowed: Bool = false,
-                  stopToken: String? = "--",
-                  parsed: OnValueParsed<Int>? = nil) {
+    public override init(longName: String? = nil,
+                         shortName: String? = nil,
+                         description: String? = nil,
+                         longPrefix: String = "--",
+                         shortPrefix: String = "-",
+                         multiAllowed: Bool = false,
+                         stopToken: String? = "--",
+                         parsed: OnValueParsed<Int>? = nil) {
         super.init(longName: longName,
             shortName: shortName,
             description: description,
@@ -127,14 +127,14 @@ public class IntOption: OptionParser<Int> {
 }
 
 public class DoubleOption: OptionParser<Double> {
-    override init(longName: String? = nil,
-                  shortName: String? = nil,
-                  description: String? = nil,
-                  longPrefix: String = "--",
-                  shortPrefix: String = "-",
-                  multiAllowed: Bool = false,
-                  stopToken: String? = "--",
-                  parsed: OnValueParsed<Double>? = nil) {
+    public override init(longName: String? = nil,
+                         shortName: String? = nil,
+                         description: String? = nil,
+                         longPrefix: String = "--",
+                         shortPrefix: String = "-",
+                         multiAllowed: Bool = false,
+                         stopToken: String? = "--",
+                         parsed: OnValueParsed<Double>? = nil) {
         super.init(longName: longName,
             shortName: shortName,
             description: description,
@@ -157,14 +157,14 @@ public class UnexpectedOptionHandler: Parser {
     public var description: [(argument: String, description: String)] = []
 
     /** token after which all arguments will be treated as var args, instead of parsing them as e.g. flags */
-    var stopToken: String?
+    public var stopToken: String?
 
     private let longPrefix: String?
     private let shortPrefix: String?
 
-    init(longPrefix: String? = "--",
-         shortPrefix: String? = "-",
-         stopToken: String? = "--") {
+    public init(longPrefix: String? = "--",
+                shortPrefix: String? = "-",
+                stopToken: String? = "--") {
         self.longPrefix = longPrefix
         self.shortPrefix = shortPrefix
         self.stopToken = stopToken

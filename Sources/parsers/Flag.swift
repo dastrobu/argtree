@@ -21,14 +21,14 @@ public class Flag: ValueParser<Bool> {
         return tokensConsumed
     }
 
-    init(longName: String? = nil,
-         shortName: Character? = nil,
-         description: String? = nil,
-         longPrefix: String = "--",
-         shortPrefix: Character = "-",
-         multiAllowed: Bool = false,
-         stopToken: String? = "--",
-         parsed: OnParsed? = nil) {
+    public init(longName: String? = nil,
+                shortName: Character? = nil,
+                description: String? = nil,
+                longPrefix: String = "--",
+                shortPrefix: Character = "-",
+                multiAllowed: Bool = false,
+                stopToken: String? = "--",
+                parsed: OnParsed? = nil) {
         self.multiAllowed = multiAllowed
         var aliases: [String] = []
         if let longName = longName {
@@ -58,9 +58,9 @@ public class UnexpectedFlagHandler: Parser {
     private let longPrefix: String?
     private let shortPrefix: String?
 
-    init(longPrefix: String? = "--",
-         shortPrefix: String? = "-",
-         stopToken: String? = "--") {
+    public init(longPrefix: String? = "--",
+                shortPrefix: String? = "-",
+                stopToken: String? = "--") {
         self.longPrefix = longPrefix
         self.shortPrefix = shortPrefix
         self.stopToken = stopToken

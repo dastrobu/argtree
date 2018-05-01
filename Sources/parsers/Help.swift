@@ -36,7 +36,7 @@ internal func createTable(_ rows: [[String]]) -> String {
  */
 public class Help: Flag {
 
-    init(longName: String? = "help",
+    public init(longName: String? = "help",
          shortName: Character? = "h",
          description: String? = "print this help",
          longPrefix: String = "--",

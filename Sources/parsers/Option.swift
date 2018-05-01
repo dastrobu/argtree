@@ -3,7 +3,6 @@ public enum OptionParseError<T>: Error {
     case missingValueForOption(option: OptionParser<T>, atIndex: Int, key: String)
     case valueNotIntConvertible(option: OptionParser<T>, atIndex: Int, value: String)
     case valueNotDoubleConvertible(option: OptionParser<T>, atIndex: Int, value: String)
-    // TODO:
     case unexpectedOption(option: String, atIndex: Int)
 }
 
@@ -151,5 +150,42 @@ public class DoubleOption: OptionParser<Double> {
             }
             throw OptionParseError.valueNotDoubleConvertible(option: self, atIndex: i, value: value)
         }
+    }
+}
+
+/** allows to detect unexpected flags and convert them to errors */
+public class UnexpectedOptionHandler: Parser {
+    public var description: [(argument: String, description: String)] = []
+
+    /** token after which all arguments will be treated as var args, instead of parsing them as e.g. flags */
+    var stopToken: String?
+
+    private let longPrefix: String?
+    private let shortPrefix: String?
+
+    init(longPrefix: String? = "--",
+         shortPrefix: String? = "-",
+         stopToken: String? = "--") {
+        self.longPrefix = longPrefix
+        self.shortPrefix = shortPrefix
+        self.stopToken = stopToken
+    }
+
+    public func parse(arguments: [String], atIndex i: Int, path: [ParsePathSegment]) throws -> Int {
+        let arg = arguments[i]
+        if arg == stopToken {
+            return 0
+        }
+        if let longPrefix = longPrefix {
+            if arg.starts(with: longPrefix) {
+                throw OptionParseError<Void>.unexpectedOption(option: arg, atIndex: i)
+            }
+        }
+        if let shortPrefix = shortPrefix {
+            if arg.starts(with: shortPrefix) {
+                throw OptionParseError<Void>.unexpectedOption(option: arg, atIndex: i)
+            }
+        }
+        return 0
     }
 }

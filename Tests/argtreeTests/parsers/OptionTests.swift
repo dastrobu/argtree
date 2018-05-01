@@ -77,6 +77,21 @@ final class OptionTests: XCTestCase {
         XCTAssertEqual(varArgs.values.first, "--xx=bar")
     }
 
+    func testUnexpectedOptionHandling() {
+        do {
+            try ArgTree(parsers: [
+                Option(shortName: "x"),
+                UnexpectedOptionHandler(),
+            ]).parse(arguments: ["foo", "-x=foo", "-y=bar"])
+        } catch OptionParseError<Void>.unexpectedOption(option: "-y=bar", atIndex: 2) {
+            return
+
+        } catch {
+            XCTFail("unexpected error \(error)")
+        }
+        XCTFail("no error")
+    }
+
 #if !os(macOS)
     static var allTests = [
         ("testLongName", testLongName),
@@ -85,6 +100,7 @@ final class OptionTests: XCTestCase {
         ("testShortName", testShortName),
         ("testShortNameWithEquals", testShortNameWithEquals),
         ("testStopToken", testStopToken),
+        ("testUnexpectedOptionHandling", testUnexpectedOptionHandling),
     ]
 #endif
 }

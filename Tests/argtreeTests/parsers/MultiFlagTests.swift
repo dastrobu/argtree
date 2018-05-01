@@ -88,6 +88,8 @@ final class MultiFlagTests: XCTestCase {
     static var allTests = [
         ("testFlagParsing", testFlagParsing),
         ("testFlagParsingForSingleFlag", testFlagParsingForSingleFlag),
+        ("testFlagParsingStopToken", testFlagParsingStopToken),
+        ("testHelpText", testHelpText),
     ]
 #endif
 }

@@ -15,7 +15,6 @@ os:
   - osx
 
 env:
-  -  SWIFT_VERSION=4.0
   -  SWIFT_VERSION=4.1
 
 before_install:

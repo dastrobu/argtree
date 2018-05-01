@@ -5,10 +5,10 @@ public enum ArgParseError: Error {
 /**
  * Var arg parser, which collects all arguments, not parsed by other parsers.
  */
-public class VarArgs: Parser, ParsePathSegment, RandomAccessCollection {
+public class VarArgs: Parser {
     public private(set) var description: (argument: String, description: String)?
 
-    private var values: [String] = []
+    public var values: [String] = []
 
     /** token after which all arguments will be treated as var args, instead of parsing them as e.g. flags */
     public var stopToken: String?
@@ -27,26 +27,6 @@ public class VarArgs: Parser, ParsePathSegment, RandomAccessCollection {
             values.append(arg)
             return 1
         }
-    }
-
-    public var indices: CountableRange<Int> {
-        return values.indices
-    }
-
-    public subscript(bounds: Range<Int>) -> ArraySlice<String> {
-        return values[bounds]
-    }
-
-    public subscript(position: Int) -> String {
-        return values[position]
-    }
-
-    public var startIndex: Int {
-        return values.startIndex
-    }
-
-    public var endIndex: Int {
-        return values.endIndex
     }
 }
 

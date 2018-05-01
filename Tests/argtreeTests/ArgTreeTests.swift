@@ -151,7 +151,7 @@ final class ArgTreeTests: XCTestCase {
                 varArgs,
             ])
         try! argTree.parse()
-        varArgs.forEach { _ in
+        varArgs.values.forEach { _ in
             /* ... */
         }
     }

@@ -73,8 +73,8 @@ final class OptionTests: XCTestCase {
         XCTAssertEqual(tokensConsumed, 4)
         XCTAssertEqual(parsedValue, "foo")
         XCTAssertEqual(option.values.count, 1)
-        XCTAssertEqual(varArgs.count, 1)
-        XCTAssertEqual(varArgs.first, "--xx=bar")
+        XCTAssertEqual(varArgs.values.count, 1)
+        XCTAssertEqual(varArgs.values.first, "--xx=bar")
     }
 
 #if !os(macOS)

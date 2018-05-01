@@ -28,9 +28,9 @@ final class CommandTests: XCTestCase {
         // although bar was passed twice, it should only be parsed once, since commands cannot be passed twice.
         // The second one should be treated as variadic argument.
         XCTAssertEqual(command.count, 1)
-        XCTAssertEqual(varArgs.count, 2)
-        XCTAssertEqual(varArgs[0], "biz")
-        XCTAssertEqual(varArgs[1], "bar")
+        XCTAssertEqual(varArgs.values.count, 2)
+        XCTAssertEqual(varArgs.values[0], "biz")
+        XCTAssertEqual(varArgs.values[1], "bar")
     }
 
     func testCommandParsingWithGlobalFlag() {

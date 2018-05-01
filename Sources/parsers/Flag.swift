@@ -22,10 +22,10 @@ public class Flag: ValueParser<Bool> {
     }
 
     init(longName: String? = nil,
-         shortName: String? = nil,
+         shortName: Character? = nil,
          description: String? = nil,
          longPrefix: String = "--",
-         shortPrefix: String = "-",
+         shortPrefix: Character = "-",
          multiAllowed: Bool = false,
          stopToken: String? = "--",
          parsed: OnParsed? = nil) {
@@ -35,7 +35,7 @@ public class Flag: ValueParser<Bool> {
             aliases.append(longPrefix + longName)
         }
         if let shortName = shortName {
-            aliases.append(shortPrefix + shortName)
+            aliases.append(String(shortPrefix) + String(shortName))
         }
         super.init(aliases: aliases, description: description, stopToken: stopToken, parsed: { _, path in
             if let parsed = parsed {

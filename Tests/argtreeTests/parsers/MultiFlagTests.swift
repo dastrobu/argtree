@@ -6,7 +6,7 @@ final class MultiFlagTests: XCTestCase {
     func testFlagParsing() {
         var xPath: [ParsePathSegment] = []
         var yPath: [ParsePathSegment] = []
-        let tokensConsumed = try? ArgTree(parsers: [
+        let tokensConsumed = try! ArgTree(parsers: [
             MultiFlag(parsers: [
                 Flag(shortName: "x", parsed: { path in
                     xPath = path
@@ -20,6 +20,21 @@ final class MultiFlagTests: XCTestCase {
         XCTAssertEqual(tokensConsumed, 2)
         XCTAssertEqual(xPath.count, 1, "xPath \(xPath)")
         XCTAssertEqual(yPath.count, 1, "yPath \(yPath)")
+    }
+
+    func testFlagParsingWithOneFlag() {
+        var xPath: [ParsePathSegment] = []
+        let tokensConsumed = try! ArgTree(parsers: [
+            MultiFlag(parsers: [
+                Flag(shortName: "x", parsed: { path in
+                    xPath = path
+                }),
+            ]),
+            VarArgs(),
+        ]).parse(arguments: ["ignored", "foo", "-x"])
+
+        XCTAssertEqual(tokensConsumed, 3)
+        XCTAssertEqual(xPath.count, 1, "xPath \(xPath)")
     }
 
     func testFlagParsingStopToken() {

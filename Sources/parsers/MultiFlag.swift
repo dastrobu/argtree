@@ -47,7 +47,14 @@ public class MultiFlag: Parser, ParserNode, ParsePathSegment {
                 return 1
             }
         }
-        return try parseTree(arguments: arguments, atIndex: i, path: path + [self], childParsers: parsers)
+        // parse flag normally
+        for parser in parsers {
+            let tokensConsumed = try parser.parse(arguments: arguments, atIndex: i, path: path + [self])
+            if tokensConsumed > 0 {
+                return tokensConsumed
+            }
+        }
+        return 0
     }
 
     public var description: [(argument: String, description: String)] {

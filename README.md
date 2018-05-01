@@ -48,7 +48,7 @@ if verbose {
 ```
 
 ### Help Text generation
-Help texts can be generated automatically (partially), detaild in [Automatic Help Flag](#automatic-help-flag)
+Help texts can be generated automatically (partially), detaild in [Automatic Help Flag](#automatic-help-flag).
 
 ## Parsers
 
@@ -57,6 +57,7 @@ There are a variaty of parsers implemented to compose the parser tree.
  * [Option](#option)
  * [Command](#command)
  * [VarArgs](#varargs)
+ 
 If those are not sufficient, it is easy to implement a custom parser. Therefore, the `Parser` interface must be 
 implemented, see [Architecture](#architecture) for details.
 
@@ -79,11 +80,11 @@ let verbose = verboseFlag.value != nil
 
 #### Flag Prefixes
 By default long names get the prefix "--" and short names get the prefix "-". 
-Other prefixed can be specified via
+Other prefixes, to handle e.g. `+a`, can be specified.
 ```swift
 let a = Flag(shortName: "a", shortPrefix: "+")
 ```
-to handle the flag `+a`. The same can be done for long prefixes.
+The same can be done for long prefixes.
 
 #### Passing a Flag Multiple Times
 By default passing the same flag multiple times is reported as error (`FlagParseError.flagAllowedOnlyOnce`). 
@@ -91,7 +92,7 @@ Sometimes it is, however, useful to be able to pass the same flag multiple times
 a verbose output and `-v -v` should print a very verbose output. In this case the flag should have set the 
 property `multiAllowed` to true. 
 ```swift
-let verboseFlag = Flag(longName: "verbose", shortName: "v")
+let verboseFlag = Flag(longName: "verbose", shortName: "v", multiAllowed: true)
 try! ArgTree(parsers: [verboseFlag]).parse()
 let verbosity = verboseFlag.values.count
 ```
@@ -100,21 +101,24 @@ to decide if passing the same flag multiple times is simply ignored or meaning s
 
 #### Handling Unexpected Flags
 By default, nothing happens if a flag was set at the command line, that has no meaning, i.e. that is not parsed.
-To report all flag like arguments, that have not meaning as errors, simply add the `UnexpectedFlagHandler` to 
-the parsers, after all flag parsers.
+To report all flag like arguments that have not meaning as errors, simply add the `UnexpectedFlagHandler` to 
+the parsers. The handler must be added after the flag parsers, to report errors correctly.
 ```swift
 try! ArgTree(parsers: [
         Flag(longName: "verbose", shortName: "v")
         UnexpectedFlagHandler()
 ]).parse()
 ```
-In this case, all arguments starting with either the long or short prefix will reported as error. 
+In this case, all arguments starting with either the long or short prefix will be reported as errors. 
 The `UnexpectedFlagHandler` supports a [Stop Token](#stop-token), to allow for flag like var args. Also, 
 the `longPrefix` and `shortPrefix` can be customized. 
-If Flags with different prefixes are used, e.g. `-a` and `+a`, two seperate `UnexpectedFlagHandler` can be added, 
+If flags with different prefixes are used, e.g. `-a` and `+a`, two seperate `UnexpectedFlagHandler` can be added, 
 one for the standard prefix and one for the `+` prefix.
 
 #### Multi Flags
+Multi flags are combined flags (for short names). For example if there are flags `-a` and `-b` one could also 
+pass the combined flag `-ab` or `-ba`, which is equivalent to `-a -b`. 
+
 TODO
 
 #### Automatic Help Flag
@@ -195,16 +199,15 @@ argTree.writeToOutStream = { s in
 ### Option
 An option is a key value property like `--foo=bar` or `--foo bar`. 
 An option has a long and a short name, both are optional. 
-Two syntaxes are supported, i.e. a key value pair can be passed separated by `=` or by passing them as subsequent 
-arguments. If the value to a key cannot be parsed, it will be reported as error 
+Two syntaxes are supported, i.e. a key value pair can be passed separated by `=` or by passing the value as subsequent 
+argument to the key. If the value to a key cannot be parsed, it will be reported as error 
 (`OptionParseError.missingValueForOption`).
 The following example shows the basic usage of options.
 ```swift
 var foo: String = "default"
 try! ArgTree(parsers: [
-    Option(longName: "foo") {value, path in 
-        foo = value}
-    ]).parse()
+    Option(longName: "foo") {value, _ in foo = value}
+]).parse()
 ```
 
 #### Option Prefixes
@@ -225,16 +228,16 @@ a closure. Although this is possible as well.
 ```swift
 var foo: [String] = []
 try! ArgTree(parsers: [
-        Option(longName: "foo", multiAllowed: true) { value, _ in 
-            foo.append(value)
-        }
-    ]).parse()
+    Option(longName: "foo", multiAllowed: true) { value, _ in 
+        foo.append(value)
+    }
+]).parse()
 ```
 
 #### Int Option and Double Option
 If only integers or floating point values are allowed for an option, 
-the convenience parsers `IntOption` and `DoubleOption` can be employed. They works exactly like `Option` except 
-that all values, not parsable to an `Int` or `Double` will be reported as 
+the convenience parsers `IntOption` and `DoubleOption` can be employed. They work exactly like `Option` except 
+that all values not parsable to an `Int` or `Double` will be reported as 
 `OptionParseError.valueNotIntConvertible` or `OptionParseError.valueNotDoubleConvertible`, respectively.
 
 #### Handling Unexpected Options
@@ -243,45 +246,43 @@ Simply add a `UnexpectedOptionHandler` to the parsers.
 
 ### Command
 A command is a special argument to change control flow of the program. Simple scripts or programs like e.g. `rm` 
-often do not have commands, more advanced command line programs, like. e.g. `git` support a variaty of commands 
+often do not have commands, more advanced command line programs, like. e.g. `git` support a variety of commands 
 and even sub-commands.
 The following example shows an implementation of a program, handling the command `foo`.
 ```swift
 try! ArgTree(parsers: [
     Command(name: "foo") { path in 
         /* handle foo command */ }
-    ]).parse()
+]).parse()
 ```
 When it comes to handling commands, quickly things get complicated. For example the following questions arise:
  * Should a flag be supported only on the global level, or also on the level of each command?
    * For example, the `--verbose` flag might be supported on any level and have the same effect on any level, 
      i.e. setting the output to verbose for the whole program. 
-   * The `--help` flag, on the other hand, might also be supported on every command, should however, 
+   * The `--help` flag, on the other hand, might also be supported on every command, should however
      print a different help for each command.
    * Additional flags should only be supported for certain commands and for others not.
- * The same questions arise for options.
+ * The same questions arises for options.
  * How are var args handled?
    * Some commands may take var args, others don't.
  * Must var args be handled on the global level and also on the command level?
  * Can commands be nested?
    * If there exist commands, there should be also sub-commands and sub-sub-commands.
 
-The good thing is, everything can be done with ArgTree. However, it requires a bit of an understanding, how
+The good thing is, everything can be done with ArgTrtestCommandParsingee. However, it requires a bit of an understanding, how
 the parsing works, since the order in which parses are added to the parse tree matters.
-To support finding out the correct order, consider to switch on logging while parsing, to get a deeper 
-understanding of why a certain argument is parsed or not parsed, see [Logging](#logging).
+To support finding out the correct order, consider to switch on logging while parsing, see [Logging](#logging).
 
 Some of the cases listed above are detailed in examples in the following sections.
-
 
 #### Global Flags (or Options)
 A global flag, that does the same for every command is easy to implement. Just add it before all commands.
 ```swift
 var verbose = false;
 try! ArgTree(parsers: [
-        Flag(longName: "verbose", shortName: "v") { _ in verbose = true }
-        Command(name: "foo") 
-    ]).parse()
+    Flag(longName: "verbose", shortName: "v") { _ in verbose = true }
+    Command(name: "foo") 
+]).parse()
 ```
 The same can be done for options.
 
@@ -305,7 +306,8 @@ argTree
 ```
 Here two differnt `Flag` instances (`help(1)` and `help(2)`) are employed to parse the help flags.
 
-Instead of defining separate Flag instances, different actions can also be performed, based on the parse path.
+Instead of defining separate Flag instances, different actions can also be performed, based on the 
+[parse path](#parse-path).
 ```swift
 let help = Flag(longName: "help", shortName: "h")
 let foo = Command(name: "foo", parsers: [help])
@@ -321,8 +323,7 @@ help.parsed = { _, path in
     }
 try! ArgTree(parsers: [help foo]).parse()
 ```
-By using the path, to determine the context of a flag, very generic implementations of a flag are possible. 
-The same can be done for options.
+By using the path, to determine the context of a flag, very generic implementations are possible. 
 
 The corresponding parse tree is
 ```
@@ -342,18 +343,18 @@ If var args should be passed to a specific command, it can be done simply by add
 ```swift
 let fooVarArgs = VarArgs()
 try! ArgTree(parsers: [
-        Command(name: "foo", parsers: [fooVarArgs]) 
-    ]).parse()
+    Command(name: "foo", parsers: [fooVarArgs]) 
+]).parse()
 ```
-To add support for var args also on the global level, simply add another var args object at this level. 
-Make sure to add it after the command. 
+To add support for var args also on the global level, simply another var args object can be added at this level. 
+It must be added after the command, otherwise the command will be parsed as var arg.
 ```swift
 let globalVarArgs = VarArgs()
 let fooVarArgs = VarArgs()
 try! ArgTree(parsers: [
-        Command(name: "foo", parsers: [fooVarArgs]),
-        globalVarArgs,
-    ]).parse()
+    Command(name: "foo", parsers: [fooVarArgs]),
+    globalVarArgs,
+]).parse()
 ```
 Look at some examples, how var args will be parsed in this case.
 ```bash
@@ -387,14 +388,14 @@ try! ArgTree(parsers: [foo, baz]).parse()
 #### `parsed` and `afterChildrenParsed`
 The command has two optional delegates: `parsed` and `afterChildrenParsed`.
 The first, `parsed` is called, directly after the command was parsed, as for flags and options. At this time, 
-however, no further arguments are parsed by parsers in on the `parsers` property. 
+however, no further arguments are parsed by parsers in the `parsers` property. 
 The second delegate `afterChildrenParsed` is called, when the command was parsed and also all subsequent arguments
 are parsed by parsers from the `parsers` property. So when a command is defined like in the following example
 ```swift
 let bar = Flag(longName: "bar")
 let foo = Command(name: "foo", parsers: [bar]) { _ in print("bar?: \(bar.value)") }
 ```
-the trailing closure refers to `afterChildrenParsed` and one could access parsed values from any child parser.
+the trailing closure refers to `afterChildrenParsed` and all parsed values from any child parser can be accessed.
 
 #### Nested Commands
 `Commands`, `Flags`, `Options` and so on can be nested to arbitrary depth. 
@@ -429,7 +430,7 @@ This can be achived, by defining the following parse tree.
 ```swift
 let varArgs = VarArgs()
 let argTree = ArgTree(parsers: [
-    Flag(longName: "verbose", shortName: "-v", description: "verbose output") {_ _ in }
+    Flag(longName: "verbose", shortName: "-v", description: "verbose output") { _ _ in }
     varArgs
 ])
 ```
@@ -442,6 +443,15 @@ Parsed var args are usually handled, after the parsing was completed via the `Ra
 try! argTree.parse()
 varArgs.values.forEach{ value in /* ... */ }
 ```
+
+### Handling Unexpected Arguments 
+
+If no var args are used, it might by helpful to report all errors as unexpected arg. 
+In this case the `UnexpectedArgHandler` can be added as last parser. This will report any arg, not parsed by
+another parser before as `ArgParseError.unexpectedArg`.
+
+See also [Handling Unexpected Flags](#handling-unexpected-flags) and 
+[Handling Unexpected Options](#handling-unexpected-options).
 
 #### Stop Token
 A stop token stops parsing subsequent arguments as they would normally be parsed. 
@@ -463,9 +473,38 @@ argTree.defaultAction = { () in print("this is the default") }
 ```
 See also [Command Default Action](#command-default-action).
 
+## Error Handling
+
+The `parse` is supposed to throw errors on parsing the arguments. A variety of errors can be thrown and in simple 
+scripts, it may be sufficient to force try the parse call (as in all examples in this document).
+Any parse error will be reported to stderr and the program will exit. 
+While this default behaviour is sufficient for simple scripts and programs, more suffisticated programs, might 
+print nice error messages. This can be done by catching errors and doing some nice error handling.
+```swift
+do {
+    try ArgTree(parsers: [UnexpectedArgHandler()]).parse()
+} catch ArgParseError.unexpectedArg(argument:let arg, atIndex:_) {
+    print("got an unexpected argument: \(arg)")
+    exit(1)
+} catch let error {
+    print("unknown error \(error)")
+    exit(99)
+}
+
+```
+
 ## Logging
+
+To get a deeper understanding of why a certain argument is parsed or not parsed it can be very helpful to switch 
+on logging.
+
 TODO
 
 ## Architecture
+TODO
+
+### Parse Trees
+
+### Parse Path
 TODO
 

@@ -1,6 +1,6 @@
 import XCTest
 
-internal func XCTAssertEqualIgnoringWhiteSpace(_ s1: String, _ s2: String,
+internal func XCTAssertEqualTrimmingWhiteSpace(_ s1: String, _ s2: String,
                                                file: StaticString = #file,
                                                line: UInt = #line) {
     XCTAssertEqual(

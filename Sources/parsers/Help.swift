@@ -11,6 +11,11 @@ internal func createTable(_ rows: [[String]]) -> String {
         }
     }
 
+    // set the last col count to zero, to avoid padding the last col
+    if let _ = colMaxCount.popLast() {
+        colMaxCount.append(0)
+    }
+
     // format the columns
     let r = rows.map { row in
         return row

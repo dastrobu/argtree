@@ -6,20 +6,43 @@
 
 Command line argument parser package in swift.
 
+The basic idea is to define a tree structure of parsers which then parses all command line arguments.
+This approach is very flexible and allows for quick and easy flag parsing for a simple scirpt, as well as 
+complicated parse trees for big command command line programs.
+
+## Table of Contents
+
+  * [Installation](#installation)
+     * [Swift Package Manager](#swift-package-manager)
+     * [Dependencies](#dependencies)
+  * [Getting started](#getting-started)
+     * [Help Text generation](#help-text-generation)
+  * [Parsers](#parsers)
+     * [Flag](#flag)
+     * [Option](#option)
+     * [Command](#command)
+     * [Var Args](#var-args)
+     * [Handling Unexpected Arguments](#handling-unexpected-arguments)
+  * [Default Action](#default-action-1)
+  * [Error Handling](#error-handling)
+  * [Logging](#logging)
+  * [Architecture](#architecture)
+     * [Parse Trees](#parse-trees)
+     * [Parse Path](#parse-path)
+
 ## Installation
 
+### Swift Package Manager
+    dependencies: [
+            .package(url: "https://github.com/dastrobu/argtree.git", from: "1.0.0"),
+        ],
+        
 ### Dependencies
 At least `clang-3.6` is required. On linux one might need to install it explicitly.
 There are no dependencies on macOS.
 
-### Swift Package Manager
-
-    dependencies: [
-            .package(url: "https://github.com/dastrobu/argtree.git", from: "1.0.0"),
-        ],
-
 ## Getting started
-The following example shows a hello world script wiht one flag (no option or command) and a generated help.
+The following example shows a hello world script with one flag (no option or command) and generated help.
 
 ```swift
 // global modal for the application
@@ -48,10 +71,9 @@ if verbose {
 ```
 
 ### Help Text generation
-Help texts can be generated automatically (partially), detaild in [Automatic Help Flag](#automatic-help-flag).
+Help texts can be generated automatically (partially), detailed in [Automatic Help Flag](#automatic-help-flag).
 
 ## Parsers
-
 There are a variaty of parsers implemented to compose the parser tree. 
  * [Flag](#flag)
  * [Option](#option)
@@ -119,7 +141,16 @@ one for the standard prefix and one for the `+` prefix.
 Multi flags are combined flags (for short names). For example if there are flags `-a` and `-b` one could also 
 pass the combined flag `-ab` or `-ba`, which is equivalent to `-a -b`. 
 
-TODO
+To achieve this kind of parsing use the `MultiFlag`.
+```swift
+try! ArgTree(parsers: [
+    MultiFlag(parsers: [
+        Flag(shortName: "a")
+        Flag(shortName: "b")
+    ])
+]).parse()
+```
+Note that the mulit flag and all the added flags must have the same `shortPrefix` to get the expected result.
 
 #### Automatic Help Flag
 If initializing `ArgTree` with a `description` or `helpText` a help flag
@@ -426,7 +457,7 @@ my_script file1 file2 --verbose
 ```
 Both scripts should process `file1` and `file2` as var args and handle `-v` or `--verbose` as flag, 
 regardless of its position (to handle `-v` or `--verbose` as file, see [Stop Token](#stop-token)). 
-This can be achived, by defining the following parse tree.
+This can be achieved, by defining the following parse tree.
 ```swift
 let varArgs = VarArgs()
 let argTree = ArgTree(parsers: [
@@ -445,7 +476,6 @@ varArgs.values.forEach{ value in /* ... */ }
 ```
 
 ### Handling Unexpected Arguments 
-
 If no var args are used, it might by helpful to report all errors as unexpected arg. 
 In this case the `UnexpectedArgHandler` can be added as last parser. This will report any arg, not parsed by
 another parser before as `ArgParseError.unexpectedArg`.
@@ -474,7 +504,6 @@ argTree.defaultAction = { () in print("this is the default") }
 See also [Command Default Action](#command-default-action).
 
 ## Error Handling
-
 The `parse` is supposed to throw errors on parsing the arguments. A variety of errors can be thrown and in simple 
 scripts, it may be sufficient to force try the parse call (as in all examples in this document).
 Any parse error will be reported to stderr and the program will exit. 
@@ -494,10 +523,10 @@ do {
 ```
 
 ## Logging
-
 To get a deeper understanding of why a certain argument is parsed or not parsed it can be very helpful to switch 
 on logging.
 
+(not implemented yet)
 TODO
 
 ## Architecture

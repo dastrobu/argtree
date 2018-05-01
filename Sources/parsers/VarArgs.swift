@@ -6,7 +6,7 @@ public enum ArgParseError: Error {
  * Var arg parser, which collects all arguments, not parsed by other parsers.
  */
 public class VarArgs: Parser {
-    public private(set) var description: (argument: String, description: String)?
+    public private(set) var description: [(argument: String, description: String)] = []
 
     public var values: [String] = []
 
@@ -19,7 +19,7 @@ public class VarArgs: Parser {
 
     public func parse(arguments: [String], atIndex i: Int, path: [ParsePathSegment]) -> Int {
         let arg: String = arguments[i]
-        if stopToken != nil && arg == stopToken {
+        if arg == stopToken {
             // take all remaining arguments as var args
             values.append(contentsOf: arguments[(i + 1)...])
             return arguments.count - i
@@ -32,7 +32,7 @@ public class VarArgs: Parser {
 
 /** allows to detect unexpected arguments and convert them to errors */
 public class UnexpectedArgHandler: Parser {
-    public var description: (argument: String, description: String)?
+    public private(set) var description: [(argument: String, description: String)] = []
 
     /** token after which all arguments will be treated as var args, instead of parsing them as e.g. flags */
     public var stopToken: String?

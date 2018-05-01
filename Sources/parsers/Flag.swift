@@ -50,7 +50,7 @@ public class Flag: ValueParser<Bool> {
 
 /** allows to detect unexpected flags and convert them to errors */
 public class UnexpectedFlagHandler: Parser {
-    public var description: (argument: String, description: String)?
+    public var description: [(argument: String, description: String)] = []
 
     /** token after which all arguments will be treated as var args, instead of parsing them as e.g. flags */
     var stopToken: String?
@@ -85,7 +85,3 @@ public class UnexpectedFlagHandler: Parser {
     }
 }
 
-// TODO: implement multi flags (as tree of flags?)
-//public class MultiFlagParser: ParserTreeNode {
-//
-//}

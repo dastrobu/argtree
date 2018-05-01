@@ -16,7 +16,7 @@ final class ArgTreeTests: XCTestCase {
 
         let tokensConsumed = try? argTree.parse(arguments: ["foo"])
         XCTAssertEqual(tokensConsumed, 1)
-        XCTAssertEqualIgnoringWhiteSpace(out, "usage")
+        XCTAssertEqualTrimmingWhiteSpace(out, "usage")
         XCTAssert(helpPrinted)
     }
 
@@ -32,7 +32,7 @@ final class ArgTreeTests: XCTestCase {
         let tokensConsumed = try? argTree.parse(arguments: ["foo"])
         XCTAssertEqual(tokensConsumed, 1)
 
-        XCTAssertEqualIgnoringWhiteSpace(out, "")
+        XCTAssertEqualTrimmingWhiteSpace(out, "")
     }
 
     func testHelpShortFlag() {
@@ -50,7 +50,7 @@ final class ArgTreeTests: XCTestCase {
         let tokensConsumed = try? argTree.parse(arguments: ["foo", "-h"])
         XCTAssertEqual(tokensConsumed, 2)
 
-        XCTAssertEqualIgnoringWhiteSpace(out, "usage")
+        XCTAssertEqualTrimmingWhiteSpace(out, "usage")
         XCTAssert(helpPrinted)
     }
 
@@ -68,7 +68,7 @@ final class ArgTreeTests: XCTestCase {
         argTree.defaultAction = nil
         let tokensConsumed = try? argTree.parse(arguments: ["foo", "--help"])
         XCTAssertEqual(tokensConsumed, 2)
-        XCTAssertEqualIgnoringWhiteSpace(out, "usage")
+        XCTAssertEqualTrimmingWhiteSpace(out, "usage")
         XCTAssert(helpPrinted)
     }
 
@@ -92,7 +92,7 @@ final class ArgTreeTests: XCTestCase {
                 --help, -h print this help
                 --bar, -b  a bar flag
             """
-        XCTAssertEqualIgnoringWhiteSpace(out, expected)
+        XCTAssertEqualTrimmingWhiteSpace(out, expected)
         XCTAssert(helpPrinted)
     }
 
@@ -115,7 +115,7 @@ final class ArgTreeTests: XCTestCase {
             usage
                 --help, -h print this help
             """
-        XCTAssertEqualIgnoringWhiteSpace(out, expected)
+        XCTAssertEqualTrimmingWhiteSpace(out, expected)
         XCTAssert(helpPrinted)
     }
 
@@ -175,7 +175,7 @@ final class ArgTreeTests: XCTestCase {
                 --verbose, -v print verbose output
                 --help, -h    print this help
             """
-        XCTAssertEqualIgnoringWhiteSpace(out, expected)
+        XCTAssertEqualTrimmingWhiteSpace(out, expected)
     }
 
 #if !os(macOS)

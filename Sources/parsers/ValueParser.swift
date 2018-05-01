@@ -49,7 +49,7 @@ open class ValueParser<T>:
 
     public func parse(arguments: [String], atIndex i: Int, path: [ParsePathSegment]) throws -> Int {
         let arg = arguments[i]
-        if stopToken != nil && arg == stopToken {
+        if arg == stopToken {
             return 0
         }
         for alias in aliases where arg == alias {
@@ -69,16 +69,16 @@ open class ValueParser<T>:
         return "\(String(describing: ValueParser.self))(\(aliases))"
     }
 
-    public var description: (argument: String, description: String)? {
+    public var description: [(argument: String, description: String)] {
         if let argumentDescription = argumentDescription {
-            return (argument: aliases.joined(separator: ", "), description: argumentDescription)
+            return [(argument: aliases.joined(separator: ", "), description: argumentDescription)]
         } else {
-            return nil
+            return []
         }
     }
 
     /**
-     * - Returns: the parsed value, if execactly one value was parse, nil otherwise.
+     * - Returns: the parsed value, if exactly one value was parse, nil otherwise.
      */
     public var value: T? {
         if values.count == 1 {

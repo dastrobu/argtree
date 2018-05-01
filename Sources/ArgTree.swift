@@ -18,7 +18,7 @@ public protocol Parser {
     /**
      * description, which may be used for help texts
      */
-    var description: (argument: String, description: String)? { get }
+    var description: [(argument: String, description: String)] { get }
 
     /**
      * parser method
@@ -107,11 +107,11 @@ public class ArgTree: ParserNode {
         let printHelp: () -> Void = {
             [unowned self] in
             var rows: [[String]] = []
-            self.parsers.forEach { parser in
-                if let (argument: argument, description: description) = parser.description {
+            self.parsers
+                .flatMap({ $0.description })
+                .forEach({ (argument: String, description: String) in
                     rows.append(["   ", argument, description])
-                }
-            }
+                })
             self.writeToOutStream(
                 "\(description)\n\(createTable(rows))")
             helpPrinted()

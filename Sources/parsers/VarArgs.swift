@@ -13,7 +13,7 @@ public class VarArgs: Parser {
     /** token after which all arguments will be treated as var args, instead of parsing them as e.g. flags */
     public var stopToken: String?
 
-    init(stopToken: String? = "--") {
+    public init(stopToken: String? = "--") {
         self.stopToken = stopToken
     }
 

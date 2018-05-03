@@ -90,8 +90,7 @@ public class ArgTree: ParserNode {
             helpPrinted()
         }
         // add help as first parse, to play together with the var arg parser
-        let i = parsers.index(where: { $0 is VarArgs }) ?? 0
-        insert(Help(longName: "help", shortName: "h", parsed: { _ in writeHelp() }), at: i)
+        insert(Help(longName: "help", shortName: "h", parsed: { _ in writeHelp() }), at: 0)
         defaultAction = writeHelp
     }
 
@@ -118,8 +117,7 @@ public class ArgTree: ParserNode {
             helpPrinted()
         }
         // add help as first parse, to play together with the var arg parser
-        let i = parsers.index(where: { $0 is VarArgs }) ?? 0
-        insert(Help(longName: "help", shortName: "h", parsed: { _ in printHelp() }), at: i)
+        insert(Help(longName: "help", shortName: "h", parsed: { _ in printHelp() }), at: 0)
         defaultAction = printHelp
     }
 

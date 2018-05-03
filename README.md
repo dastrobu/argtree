@@ -191,15 +191,13 @@ flags:
 ```
 
 ##### Parse Order
-The generated help flag is always added before the first [Var Args](#varargs) parser (which should usually be last), or as last parser, if there is no var args parser. 
-This ensures parse order plays together with var args nicely. 
+The generated help flag is always added as first parser to make sure it plays together with 
+[Var Args](#varargs) nicely. 
 The order of the parsers can be changed after creation of the `ArgTree` object by manipulating its elements via the 
 `MutableCollection` protocol (like an array). For example, to move the auto generated help flag parser to the end, do:
 ```swift
 var argTree = ArgTree(description: "foo")
-
-let help = a.remove(at: a.index(where: {$0 is Help})!) // find help
-a.append(help) // add it at the end
+argTree.append(argTree.removeFirst())
 ```
 
 ##### Default Action

@@ -45,8 +45,6 @@ open class ValueParser<T>:
         self.stopToken = stopToken
     }
 
-    // TODO: add convenience initializer for flags and options only (including multi flags)
-
     public func parse(arguments: [String], atIndex i: Int, path: [ParsePathSegment]) throws -> Int {
         let arg = arguments[i]
         if arg == stopToken {

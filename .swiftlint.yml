@@ -2,6 +2,5 @@ disabled_rules: # rule identifiers to exclude from running
   - trailing_comma
   - identifier_name
   - force_try
-  - todo
 function_body_length:
   - 100

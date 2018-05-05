@@ -133,6 +133,7 @@ public class ArgTree: ParserNode {
             if let defaultAction = defaultAction {
                 defaultAction()
             }
+            return 0
         }
         return try parseTree(arguments: arguments, atIndex: i, path: path, childParsers: parsers)
     }

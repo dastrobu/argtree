@@ -26,38 +26,47 @@ public class MultiFlag: Parser, ParserNode, ParsePathSegment {
             Log.debug("stopping parsing on stopToken '\(arg)'")
             return 0
         }
-let prefixString = String(shortPrefix)
+        let prefixString = String(shortPrefix)
         if arg.starts(with: prefixString) {
             if let j: String.Index = arg.index(of: shortPrefix) {
-            // create full flags
-            let flags: [String] = arg.suffix(from: arg.index(after: j)).map({
-                prefixString + String($0)
-            })
-            // find a valid flag parser for each flag
-#if swift(>=4.1)            let matched: [(parser: Flag, flag: String)] =
-                flags.compactMap({ flag in
-                    if let parser = self.parsers
-                        .compactMap({ $0 as? Flag })
-                        .first(where: { parser in parser.aliases.contains(flag) }) {
-                        return (parser: parser, flag: flag)
-                    }
-                    return nil
-                })#else
-            let matched: [(parser: Flag, flag: String)] = flags.flatMap({ flag in
+                // create full flags
+                let flags: [String] = arg.suffix(from: arg.index(after: j)).map({
+                    prefixString + String($0)
+                })
+                // find a valid flag parser for each flag
+#if swift(>=4.1)
+                let matched: [(parser: Flag, flag: String)] =
+                    flags.compactMap({ flag in
+                        if let parser = self.parsers
+                            .compactMap({ $0 as? Flag })
+                            .first(where: { parser in parser.aliases.contains(flag) }) {
+                            return (parser: parser, flag: flag)
+                        }
+                        return nil
+                    })
+#else
+                let matched:[(parser:Flag, flag:String)] = flags.flatMap({
+                flag in
                 if let parser = self.parsers
-                    .flatMap({ $0 as? Flag })
-                    .first(where: { parser in parser.aliases.contains(flag) }) {
-                    return (parser: parser, flag: flag)
-            }
-                return nil
-            })
-#endif
-            // check if all flags are valid flags, do not treat this as multi flag otherwise
-            if matched.count == flags.count {
-                Log.debug("handling '\(arg)' as multi flag, generated: \(flags)")try matched.forEach { parser, flag in
-                    _ = try parser.parse(arguments: arguments[..<i] + [flag], atIndex: i, path: path + [self])
+                .flatMap({
+                $0 as? Flag
+                })
+                .first(where :{
+                parser in parser.aliases.contains(flag)
+                }) {
+                return (parser:parser, flag:flag)
                 }
-                return 1} else {
+                return nil
+                })
+#endif
+                // check if all flags are valid flags, do not treat this as multi flag otherwise
+                if matched.count == flags.count {
+                    Log.debug("handling '\(arg)' as multi flag, generated: \(flags)")
+                    try matched.forEach { parser, flag in
+                        _ = try parser.parse(arguments: arguments[..<i] + [flag], atIndex: i, path: path + [self])
+                    }
+                    return 1
+                } else {
                     Log.debug("'\(arg)' is not a valid multi flag since not all generated flags \(flags) "
                         + "can be parsed as individual flags")
                 }

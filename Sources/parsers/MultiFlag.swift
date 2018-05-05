@@ -1,7 +1,7 @@
 #if swift(>=4.1)
 #else
 /** backport of compact map to swift 4.0 */
-extension LazySequenceProtocol {
+extension Array {
     public func compactMap<ElementOfResult>(
         _ transform: @escaping (Elements.Element) -> ElementOfResult?
     ) -> LazyMapSequence<

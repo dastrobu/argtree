@@ -1,3 +1,5 @@
+import LoggerAPI
+
 /**
  * callback after a value was parsed
  *
@@ -35,6 +37,13 @@ open class ValueParser<T>:
     private let argumentDescription: String?
     public var parsed: OnValueParsed<T>?
 
+    /**
+     * - Parameters:
+     *   - aliases: all strings that should be matched by this parser, e.g. for a flag '-v' and '--verbose'
+     *   - description: description for help text generation
+     *   - stopToken: token, which causes parsing to stop. Subsequent arguments will be consumend by another parser.
+     *   - parsed: call back closure, after the value was parsed
+     */
     public init(aliases: [String],
                 description: String?,
                 stopToken: String? = "--",
@@ -48,9 +57,11 @@ open class ValueParser<T>:
     public func parse(arguments: [String], atIndex i: Int, path: [ParsePathSegment]) throws -> Int {
         let arg = arguments[i]
         if arg == stopToken {
+            Log.debug(logMsg("stopping parsing on stopToken '\(arg)'", forPath: path))
             return 0
         }
         for alias in aliases where arg == alias {
+            Log.debug(logMsg("\(self) parsing argument \(arg)", forPath: path))
             if let converter = valueConverter {
                 let value = try converter(arg, i)
                 self.values.append(value)

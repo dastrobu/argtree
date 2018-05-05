@@ -4,6 +4,13 @@ import Darwin
 import Glibc
 #endif
 
+import LoggerAPI
+
+internal func logMsg(_ msg: String, forPath path: [ParsePathSegment]) -> String {
+    // indent all log messages for specific path by two spaces per path segment
+    return String(repeating: " ", count: path.count * 2)
+}
+
 /**
  * A parse path segment can be used to form a parse path
  */
@@ -90,6 +97,7 @@ public class ArgTree: ParserNode {
             helpPrinted()
         }
         // add help as first parse, to play together with the var arg parser
+        Log.debug("creating generated help flag as first parser")
         insert(Help(longName: "help", shortName: "h", parsed: { _ in writeHelp() }), at: 0)
         defaultAction = writeHelp
     }
@@ -117,6 +125,7 @@ public class ArgTree: ParserNode {
             helpPrinted()
         }
         // add help as first parse, to play together with the var arg parser
+        Log.debug("creating generated help flag as first parser")
         insert(Help(longName: "help", shortName: "h", parsed: { _ in printHelp() }), at: 0)
         defaultAction = printHelp
     }
@@ -124,15 +133,21 @@ public class ArgTree: ParserNode {
     @discardableResult
     public func parse(arguments: [String] = CommandLine.arguments) throws -> Int {
         // start parsing from argument 1, since 0 is the name of the script
+        Log.debug("parsing arguments \(arguments) starting from index 1")
         return try parse(arguments: arguments, atIndex: 1, path: []) + 1
 
     }
 
     public func parse(arguments: [String], atIndex i: Int, path: [ParsePathSegment]) throws -> Int {
         if i >= arguments.count {
+            Log.debug("parse index \(i) is out of bounds, number of arguments is \(arguments.count)")
             if let defaultAction = defaultAction {
+                Log.debug("calling default action")
                 defaultAction()
+            } else {
+                Log.debug("no default action set, doing nothing")
             }
+            return 0
         }
         return try parseTree(arguments: arguments, atIndex: i, path: path, childParsers: parsers)
     }
@@ -143,12 +158,15 @@ internal func parseTree(arguments: [String],
                         atIndex i: Int,
                         path: [ParsePathSegment],
                         childParsers: [Parser]) throws -> Int {
+    Log.debug(logMsg("parse path is \(path)", forPath: path))
     var i = i
     var totalTokensConsumed = 0
     argumentLoop: while i < arguments.count {
+        Log.debug(logMsg("next argument to consume is '\(arguments[i])' at index \(i)", forPath: path))
         for parser in childParsers {
             let tokensConsumed = try parser.parse(arguments: arguments, atIndex: i, path: path)
             if tokensConsumed > 0 {
+                Log.debug(logMsg("child parser \(parser) consumed \(tokensConsumed) arguments", forPath: path))
                 i += tokensConsumed
                 totalTokensConsumed += tokensConsumed
                 continue argumentLoop

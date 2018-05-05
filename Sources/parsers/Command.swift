@@ -60,6 +60,10 @@ open class Command: ValueParser<Bool>, ParserNode {
         }
         return tokensConsumed
     }
+
+    public override var debugDescription: String {
+        return "\(String(describing: Command.self))(\(aliases))"
+    }
 }
 
 /** extension to support collection protocols for parsers */

@@ -30,15 +30,19 @@ public class MultiFlag: Parser, ParserNode, ParsePathSegment {
                 prefixString + String($0)
             })
             // find a valid flag parser for each flag
-            let matched: [(parser: Flag, flag: String)] =
-                flags.compactMap({ flag in
-                    if let parser = parsers
-                        .compactMap({ $0 as? Flag })
-                        .first(where: { parser in parser.aliases.contains(flag) }) {
-                        return (parser: parser, flag: flag)
-                    }
-                    return nil
-                })
+            let findFlagParser: (_ flag: String) -> (parser: Flag, flag: String)? = { flag in
+                if let parser = self.parsers
+                    .compactMap({ $0 as? Flag })
+                    .first(where: { parser in parser.aliases.contains(flag) }) {
+                    return (parser: parser, flag: flag)
+                }
+                return nil
+            }
+#if swift(>=4.1)
+            let matched: [(parser: Flag, flag: String)] = flags.compactMap(findFlagParser)
+#else
+            let matched:[(parser:Flag, flag:String)] = flags.flatMap(findFlagParser)
+#endif
             // check if all flags are valid flags, do not treat this as multi flag otherwise
             if matched.count == flags.count {
                 try matched.forEach { parser, flag in

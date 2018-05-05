@@ -6,11 +6,6 @@ import Glibc
 
 import LoggerAPI
 
-internal func logMsg(_ msg: String, forPath path: [ParsePathSegment]) -> String {
-    // indent all log messages for specific path by two spaces per path segment
-    return String(repeating: " ", count: path.count * 2)
-}
-
 /**
  * A parse path segment can be used to form a parse path
  */
@@ -158,15 +153,15 @@ internal func parseTree(arguments: [String],
                         atIndex i: Int,
                         path: [ParsePathSegment],
                         childParsers: [Parser]) throws -> Int {
-    Log.debug(logMsg("parse path is \(path)", forPath: path))
+    Log.debug("parse path is \(path)")
     var i = i
     var totalTokensConsumed = 0
     argumentLoop: while i < arguments.count {
-        Log.debug(logMsg("next argument to consume is '\(arguments[i])' at index \(i)", forPath: path))
+        Log.debug("next argument to consume is '\(arguments[i])' at index \(i)")
         for parser in childParsers {
             let tokensConsumed = try parser.parse(arguments: arguments, atIndex: i, path: path)
             if tokensConsumed > 0 {
-                Log.debug(logMsg("child parser \(parser) consumed \(tokensConsumed) arguments", forPath: path))
+                Log.debug("child parser \(parser) consumed \(tokensConsumed) arguments")
                 i += tokensConsumed
                 totalTokensConsumed += tokensConsumed
                 continue argumentLoop

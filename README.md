@@ -528,8 +528,18 @@ do {
 To get a deeper understanding of why a certain argument is parsed or not parsed it can be very helpful to switch 
 on logging.
 
-(not implemented yet)
-TODO
+Logging is done via the [LoggerAPI](https://github.com/IBM-Swift/LoggerAPI). So by default nothing is logged. 
+To activate logging, one must configure a logger. A simple logger is e.g. 
+[HeliumLogger](https://github.com/IBM-Swift/HeliumLogger) which can be employed in the following way.
+```swift
+import LoggerAPI
+import HeliumLogger
+Log.log = HeliumLogger(.debug)
+
+let argTree = ArgTree()
+try! argtree.parse()
+```
+Note that most of the logging is done on debug level, so this level should be activated to see any log output.
 
 ## Architecture
 TODO

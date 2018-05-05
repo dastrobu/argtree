@@ -57,11 +57,11 @@ open class ValueParser<T>:
     public func parse(arguments: [String], atIndex i: Int, path: [ParsePathSegment]) throws -> Int {
         let arg = arguments[i]
         if arg == stopToken {
-            Log.debug(logMsg("stopping parsing on stopToken '\(arg)'", forPath: path))
+            Log.debug("stopping parsing on stopToken '\(arg)'")
             return 0
         }
         for alias in aliases where arg == alias {
-            Log.debug(logMsg("\(self) parsing argument \(arg)", forPath: path))
+            Log.debug("\(self) parsing argument \(arg)")
             if let converter = valueConverter {
                 let value = try converter(arg, i)
                 self.values.append(value)

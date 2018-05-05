@@ -22,13 +22,12 @@ public class VarArgs: Parser {
     public func parse(arguments: [String], atIndex i: Int, path: [ParsePathSegment]) -> Int {
         let arg: String = arguments[i]
         if arg == stopToken {
-            Log.debug(logMsg("hit stopToken '\(arg)', consuming all remaining arguments as var args",
-                forPath: path))
+            Log.debug("hit stopToken '\(arg)', consuming all remaining arguments as var args")
             // take all remaining arguments as var args
             values.append(contentsOf: arguments[(i + 1)...])
             return arguments.count - i
         } else {
-            Log.debug(logMsg("consuming argument '\(arg)' as var arg", forPath: path))
+            Log.debug("consuming argument '\(arg)' as var arg")
             values.append(arg)
             return 1
         }
@@ -49,10 +48,10 @@ public class UnexpectedArgHandler: Parser {
     public func parse(arguments: [String], atIndex i: Int, path: [ParsePathSegment]) throws -> Int {
         let arg = arguments[i]
         if arg == stopToken {
-            Log.debug(logMsg("stopping parsing on stopToken '\(arg)'", forPath: path))
+            Log.debug("stopping parsing on stopToken '\(arg)'")
             return 0
         }
-        Log.debug(logMsg("handling unexpected argument '\(arg)' at index \(i)", forPath: path))
+        Log.debug("handling unexpected argument '\(arg)' at index \(i)")
         throw ArgParseError.unexpectedArg(argument: arg, atIndex: i)
     }
 }

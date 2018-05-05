@@ -38,15 +38,14 @@ open class OptionParser<T>: ValueParser<T> {
     open override func parse(arguments: [String], atIndex i: Int, path: [ParsePathSegment]) throws -> Int {
         let arg = arguments[i]
         if arg == stopToken {
-            Log.debug(logMsg("stopping parsing on stopToken '\(arg)'", forPath: path))
+            Log.debug("stopping parsing on stopToken '\(arg)'")
             return 0
         }
         for alias in aliases {
             if arg == alias {
                 try checkMultiOption(arguments: arguments, atIndex: i, path: path)
                 if i + 1 >= arguments.count {
-                    Log.debug(logMsg("no value for option '\(alias)' could be found for '\(arg)' at index \(i)",
-                        forPath: path))
+                    Log.debug("no value for option '\(alias)' could be found for '\(arg)' at index \(i)")
                     throw OptionParseError.missingValueForOption(option: self, atIndex: i, key: arg)
                 }
                 let value = arguments[i + 1]
@@ -66,13 +65,13 @@ open class OptionParser<T>: ValueParser<T> {
         if !multiAllowed && values.count > 0 {
             // if the option has been parsed once, it is not allowed a second time, if not explicitly allowed
             // by multiAllowed
-            Log.debug(logMsg("not allowed to pass option '\(aliases)' multiple times at index \(i)", forPath: path))
+            Log.debug("not allowed to pass option '\(aliases)' multiple times at index \(i)")
             throw OptionParseError.optionAllowedOnlyOnce(option: self, atIndex: i)
         }
     }
 
     private func parseOption(_ option: String, value: String, atIndex i: Int, path: [ParsePathSegment]) throws {
-        Log.debug(logMsg("parsing option '\(option)' at index \(i), value is '\(value)'", forPath: path))
+        Log.debug("parsing option '\(option)' at index \(i), value is '\(value)'")
         if let converter = valueConverter {
             let value = try converter(value, i)
             self.values.append(value)
@@ -197,18 +196,18 @@ public class UnexpectedOptionHandler: Parser {
     public func parse(arguments: [String], atIndex i: Int, path: [ParsePathSegment]) throws -> Int {
         let arg = arguments[i]
         if arg == stopToken {
-            Log.debug(logMsg("stopping parsing on stopToken '\(arg)'", forPath: path))
+            Log.debug("stopping parsing on stopToken '\(arg)'")
             return 0
         }
         if let longPrefix = longPrefix {
             if arg.starts(with: longPrefix) {
-                Log.debug(logMsg("handling unexpected option '\(arg)' at index \(i)", forPath: path))
+                Log.debug("handling unexpected option '\(arg)' at index \(i)")
                 throw OptionParseError<Void>.unexpectedOption(option: arg, atIndex: i)
             }
         }
         if let shortPrefix = shortPrefix {
             if arg.starts(with: shortPrefix) {
-                Log.debug(logMsg("handling unexpected option '\(arg)' at index \(i)", forPath: path))
+                Log.debug("handling unexpected option '\(arg)' at index \(i)")
                 throw OptionParseError<Void>.unexpectedOption(option: arg, atIndex: i)
             }
         }

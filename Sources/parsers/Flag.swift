@@ -75,18 +75,18 @@ public class UnexpectedFlagHandler: Parser {
     public func parse(arguments: [String], atIndex i: Int, path: [ParsePathSegment]) throws -> Int {
         let arg = arguments[i]
         if arg == stopToken {
-            Log.debug(logMsg("stopping parsing on stopToken '\(arg)'", forPath: path))
+            Log.debug("stopping parsing on stopToken '\(arg)'")
             return 0
         }
         if let longPrefix = longPrefix {
             if arg.starts(with: longPrefix) {
-                Log.debug(logMsg("handling unexpected flag '\(arg)' at index \(i)", forPath: path))
+                Log.debug("handling unexpected flag '\(arg)' at index \(i)")
                 throw FlagParseError.unexpectedFlag(flag: arg, atIndex: i)
             }
         }
         if let shortPrefix = shortPrefix {
             if arg.starts(with: shortPrefix) {
-                Log.debug(logMsg("handling unexpected flag '\(arg)' at index \(i)", forPath: path))
+                Log.debug("handling unexpected flag '\(arg)' at index \(i)")
                 throw FlagParseError.unexpectedFlag(flag: arg, atIndex: i)
             }
         }

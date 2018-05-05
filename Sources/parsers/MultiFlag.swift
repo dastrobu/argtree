@@ -23,7 +23,7 @@ public class MultiFlag: Parser, ParserNode, ParsePathSegment {
     public func parse(arguments: [String], atIndex i: Int, path: [ParsePathSegment]) throws -> Int {
         let arg = arguments[i]
         if arg == stopToken {
-            Log.debug(logMsg("stopping parsing on stopToken '\(arg)'", forPath: path))
+            Log.debug("stopping parsing on stopToken '\(arg)'")
             return 0
         }
 
@@ -46,19 +46,19 @@ public class MultiFlag: Parser, ParserNode, ParsePathSegment {
                     })
                 // check if all flags are valid flags, do not treat this as multi flag otherwise
                 if matched.count == flags.count {
-                    Log.debug(logMsg("handling '\(arg)' as multi flag, generated: \(flags)", forPath: path))
+                    Log.debug("handling '\(arg)' as multi flag, generated: \(flags)")
                     try matched.forEach { parser, flag in
                         _ = try parser.parse(arguments: arguments[..<i] + [flag], atIndex: i, path: path + [self])
                     }
                     return 1
                 } else {
-                    Log.debug(logMsg("'\(arg)' is not a valid multi flag since not all generated flags \(flags) " +
-                        "can be parsed as individual flags", forPath: path))
+                    Log.debug("'\(arg)' is not a valid multi flag since not all generated flags \(flags) "
+                        + "can be parsed as individual flags")
                 }
             }
         }
         // parse flag normally
-        Log.debug(logMsg("parsing '\(arg)' as normal flag ", forPath: path))
+        Log.debug("trying to parse '\(arg)' as normal flag ")
         for parser in parsers {
             let tokensConsumed = try parser.parse(arguments: arguments, atIndex: i, path: path + [self])
             if tokensConsumed > 0 {

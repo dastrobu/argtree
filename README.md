@@ -27,7 +27,6 @@ complicated parse trees for big command command line programs.
   * [Error Handling](#error-handling)
   * [Logging](#logging)
   * [Architecture](#architecture)
-     * [Parse Trees](#parse-trees)
      * [Parse Path](#parse-path)
 
 ## Installation
@@ -542,10 +541,96 @@ try! argtree.parse()
 Note that most of the logging is done on debug level, so this level should be activated to see any log output.
 
 ## Architecture
-TODO
 
-### Parse Trees
+The basic idead it so define a tree of parsers, which then consume argument after argument. This package helps to
+define the parser tree and invoke it. Each node in the parser tree usually parses specific types of arguments, e.g. 
+flags or options. To understand, how the parser tree must be set up, it is important to know how the tree is 
+traversed. Consider the following example
+```
+arguments = ['arg_0', 'arg_1', 'arg_2']
+```
+The first argument is always ignored, since it refers to the script name. Parsing is started at `arg_1`.
+Now, if there is the following tree
+```
+argTree
+  +-- parser_0
+  |   +-- parser_0_1
+  +-- parser_1
+```
+first, `arg_1` will be parsed. Thereby `argTree` calls each child parser with the arguments array and the index `i`, 
+where parsing should be done. 
+Each child parser, `parser_0` and `parser_1` in this case can decidide to consume any number of arguments 
+starting from `i` and returns how many arguments it consumed. Hence, if `parser_0` decides to consume all arguments,
+`parser_1` will never get called, since there are no arguments left. If `parser_0` consumes no argument, `parser_1` get
+called on the same index `i` and may also consume an arbitrary amount of arguments. 
+For any index `i` calling subsequent child parsers is stopped, as soon as one child parser consumes a non-zero amount
+of argumts. After that, the index `i` is incremented by the number of consumed arguments and the list of child parsers
+ist iterated again from the beginning.
+So if `parser_0` consumes `arg_1`, `parser_1` is not called. Instead `i` is incremented by one and `parser_0` is called
+again for `arg_2`. So it is important to understand that parsers with low indices always have higher precedence 
+than the following parsers. 
+One corner case is, if an argument is not consumed by any parser. In this case `i` is incremented by one and the 
+next argument is parsed. This means that the argument not parsed is simply ignored. If ignoring arguments is not 
+the expected behaviour, an `UnexpectedArgHandler` can be added to throw an error. 
+It should be clear now that the `UnexpectedArgHandler` must be added as last parser, since it simply consumes any
+argument and converts it into an error.
+
+Having understood the parsing process for one node, it is straightforward to understand the whole tree. Since every 
+parser node can consume any number of arguments, it is not important how the node parses arguments. So each node
+may can itself delegate to child parses in the described way. This makes it very easy to reuse simple parsers 
+for flags and options. 
+Here is a short example for a command line program, which takes a global flag `-v` and two commands `foo` and `bar`
+which themselves take flags `-f` and `-b` respectively. 
+```
+argTree
+  +-- -v
+  +-- foo
+  |   +-- -f
+  +-- bar
+      +-- -b
+```
 
 ### Parse Path
-TODO
+
+To define the context of a parsed argument, a parse path is always specified. This is simply an array of parsers in 
+the call chain. Note, that the root parser is not added to the path.
+So for the following example 
+```
+argTree
+  +-- -v
+  +-- foo
+  |   +-- -f
+  +-- bar
+      +-- -b
+```
+there would be the folowing paths when parsing
+```
+[] : -v
+[foo] : -f
+[bar] : -b
+```
+This path can be used, if a parser should be used multiple times, but should act context aware. If e.g. `-v` should 
+do something different for the `foo` and for `bar` the following tree should be defined
+```
+argTree
+  +-- foo
+  |   +-- -v
+  |   +-- -f
+  +-- bar
+      +-- -v
+      +-- -b
+```
+Or, alternatively
+```
+argTree
+  +-- -v
+  +-- foo
+  |   +-- -v
+  |   +-- -f
+  +-- bar
+      +-- -v
+      +-- -b
+```
+if `-v` should also be supported on the global level. 
+For an example on path specific actions see [Semi Global Flags (or Options)](#semi-global-flags-or-options).
 

@@ -1,3 +1,5 @@
+import LoggerAPI
+
 public enum FlagParseError: Error {
     case flagAllowedOnlyOnce(flag: Flag, atIndex: Int)
     case unexpectedFlag(flag: String, atIndex: Int)
@@ -46,6 +48,10 @@ public class Flag: ValueParser<Bool> {
             return true
         }
     }
+
+    public override var debugDescription: String {
+        return "\(String(describing: Flag.self))(\(aliases))"
+    }
 }
 
 /** allows to detect unexpected flags and convert them to errors */
@@ -69,18 +75,26 @@ public class UnexpectedFlagHandler: Parser {
     public func parse(arguments: [String], atIndex i: Int, path: [ParsePathSegment]) throws -> Int {
         let arg = arguments[i]
         if arg == stopToken {
+            Log.debug("stopping parsing on stopToken '\(arg)'")
             return 0
         }
         if let longPrefix = longPrefix {
             if arg.starts(with: longPrefix) {
+                Log.debug("handling unexpected flag '\(arg)' at index \(i)")
                 throw FlagParseError.unexpectedFlag(flag: arg, atIndex: i)
             }
         }
         if let shortPrefix = shortPrefix {
             if arg.starts(with: shortPrefix) {
+                Log.debug("handling unexpected flag '\(arg)' at index \(i)")
                 throw FlagParseError.unexpectedFlag(flag: arg, atIndex: i)
             }
         }
         return 0
+    }
+
+    public var debugDescription: String {
+        return "\(String(describing: UnexpectedFlagHandler.self))(\(String(describing: shortPrefix)), " +
+            "\(String(describing: longPrefix)))"
     }
 }

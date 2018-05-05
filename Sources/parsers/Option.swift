@@ -1,3 +1,5 @@
+import LoggerAPI
+
 public enum OptionParseError<T>: Error {
     case optionAllowedOnlyOnce(option: OptionParser<T>, atIndex: Int)
     case missingValueForOption(option: OptionParser<T>, atIndex: Int, key: String)
@@ -35,37 +37,41 @@ open class OptionParser<T>: ValueParser<T> {
 
     open override func parse(arguments: [String], atIndex i: Int, path: [ParsePathSegment]) throws -> Int {
         let arg = arguments[i]
-        if stopToken != nil && arg == stopToken {
+        if arg == stopToken {
+            Log.debug("stopping parsing on stopToken '\(arg)'")
             return 0
         }
         for alias in aliases {
             if arg == alias {
-                try checkMultiOption(atIndex: i)
+                try checkMultiOption(arguments: arguments, atIndex: i, path: path)
                 if i + 1 >= arguments.count {
+                    Log.debug("no value for option '\(alias)' could be found for '\(arg)' at index \(i)")
                     throw OptionParseError.missingValueForOption(option: self, atIndex: i, key: arg)
                 }
                 let value = arguments[i + 1]
-                try parseValue(value, atIndex: i + 1, path: path)
+                try parseOption(alias, value: value, atIndex: i + 1, path: path)
                 return 2
             } else if arg.starts(with: alias + "=") {
-                try checkMultiOption(atIndex: i)
+                try checkMultiOption(arguments: arguments, atIndex: i, path: path)
                 let value = arg.suffix(from: arg.index(after: arg.index(of: "=")!))
-                try parseValue(String(value), atIndex: i, path: path)
+                try parseOption(alias, value: String(value), atIndex: i, path: path)
                 return 1
             }
         }
         return 0
     }
 
-    private func checkMultiOption(atIndex i: Int) throws {
+    private func checkMultiOption(arguments: [String], atIndex i: Int, path: [ParsePathSegment]) throws {
         if !multiAllowed && values.count > 0 {
             // if the option has been parsed once, it is not allowed a second time, if not explicitly allowed
             // by multiAllowed
+            Log.debug("not allowed to pass option '\(aliases)' multiple times at index \(i)")
             throw OptionParseError.optionAllowedOnlyOnce(option: self, atIndex: i)
         }
     }
 
-    private func parseValue(_ value: String, atIndex i: Int, path: [ParsePathSegment]) throws {
+    private func parseOption(_ option: String, value: String, atIndex i: Int, path: [ParsePathSegment]) throws {
+        Log.debug("parsing option '\(option)' at index \(i), value is '\(value)'")
         if let converter = valueConverter {
             let value = try converter(value, i)
             self.values.append(value)
@@ -74,6 +80,10 @@ open class OptionParser<T>: ValueParser<T> {
             }
         }
 
+    }
+
+    public override var debugDescription: String {
+        return "\(String(describing: OptionParser.self))(\(aliases))"
     }
 }
 
@@ -98,6 +108,10 @@ public class Option: OptionParser<String> {
             return value
         }
     }
+
+    public override var debugDescription: String {
+        return "\(String(describing: Option.self))(\(aliases))"
+    }
 }
 
 public class IntOption: OptionParser<Int> {
@@ -121,8 +135,13 @@ public class IntOption: OptionParser<Int> {
             if let value = Int(value) {
                 return value
             }
+            Log.debug("value '\(value)' cannot be converted to Int option")
             throw OptionParseError.valueNotIntConvertible(option: self, atIndex: i, value: value)
         }
+    }
+
+    public override var debugDescription: String {
+        return "\(String(describing: IntOption.self))(\(aliases))"
     }
 }
 
@@ -147,8 +166,12 @@ public class DoubleOption: OptionParser<Double> {
             if let value = Double(value) {
                 return value
             }
+            Log.debug("value '\(value)' cannot be converted to Double option")
             throw OptionParseError.valueNotDoubleConvertible(option: self, atIndex: i, value: value)
         }
+    }
+    public override var debugDescription: String {
+        return "\(String(describing: DoubleOption.self))(\(aliases))"
     }
 }
 
@@ -173,18 +196,25 @@ public class UnexpectedOptionHandler: Parser {
     public func parse(arguments: [String], atIndex i: Int, path: [ParsePathSegment]) throws -> Int {
         let arg = arguments[i]
         if arg == stopToken {
+            Log.debug("stopping parsing on stopToken '\(arg)'")
             return 0
         }
         if let longPrefix = longPrefix {
             if arg.starts(with: longPrefix) {
+                Log.debug("handling unexpected option '\(arg)' at index \(i)")
                 throw OptionParseError<Void>.unexpectedOption(option: arg, atIndex: i)
             }
         }
         if let shortPrefix = shortPrefix {
             if arg.starts(with: shortPrefix) {
+                Log.debug("handling unexpected option '\(arg)' at index \(i)")
                 throw OptionParseError<Void>.unexpectedOption(option: arg, atIndex: i)
             }
         }
         return 0
+    }
+
+    public var debugDescription: String {
+        return "\(String(describing: UnexpectedOptionHandler.self))"
     }
 }

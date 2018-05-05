@@ -4,7 +4,7 @@
 ![Platform](https://img.shields.io/badge/platform-osx--64|linux--64-lightgrey.svg)
 [![Build Travis-CI Status](https://travis-ci.org/dastrobu/argtree.svg?branch=master)](https://travis-ci.org/dastrobu/argtree) 
 
-Command line argument parser package in swift.
+Command line argument parser package in Swift.
 
 The basic idea is to define a tree structure of parsers which then parses all command line arguments.
 This approach is very flexible and allows for quick and easy flag parsing for a simple scirpt, as well as 

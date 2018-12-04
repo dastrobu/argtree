@@ -301,7 +301,7 @@ When it comes to handling commands, quickly things get complicated. For example 
  * Can commands be nested?
    * If there exist commands, there should be also sub-commands and sub-sub-commands.
 
-The good thing is, everything can be done with ArgTrtestCommandParsingee. However, it requires a bit of an understanding, how
+The good thing is, everything can be done with ArgTree. However, it requires a bit of an understanding, how
 the parsing works, since the order in which parses are added to the parse tree matters.
 To support finding out the correct order, consider to switch on logging while parsing, see [Logging](#logging).
 

@@ -88,14 +88,14 @@ open class OptionParser<T>: ValueParser<T> {
 }
 
 public class Option: OptionParser<String> {
-    override init(longName: String? = nil,
-                  shortName: String? = nil,
-                  description: String? = nil,
-                  longPrefix: String = "--",
-                  shortPrefix: String = "-",
-                  multiAllowed: Bool = false,
-                  stopToken: String? = "--",
-                  parsed: OnValueParsed<String>? = nil) {
+    public override init(longName: String? = nil,
+                         shortName: String? = nil,
+                         description: String? = nil,
+                         longPrefix: String = "--",
+                         shortPrefix: String = "-",
+                         multiAllowed: Bool = false,
+                         stopToken: String? = "--",
+                         parsed: OnValueParsed<String>? = nil) {
         super.init(longName: longName,
             shortName: shortName,
             description: description,
@@ -170,6 +170,7 @@ public class DoubleOption: OptionParser<Double> {
             throw OptionParseError.valueNotDoubleConvertible(option: self, atIndex: i, value: value)
         }
     }
+
     public override var debugDescription: String {
         return "\(String(describing: DoubleOption.self))(\(aliases))"
     }

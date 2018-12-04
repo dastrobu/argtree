@@ -533,7 +533,7 @@ To activate logging, one must configure a logger. A simple logger is e.g.
 ```swift
 import LoggerAPI
 import HeliumLogger
-Log.log = HeliumLogger(.debug)
+Log.logger = HeliumLogger(.debug)
 
 let argTree = ArgTree()
 try! argtree.parse()

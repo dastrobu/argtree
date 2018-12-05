@@ -343,7 +343,7 @@ Instead of defining separate Flag instances, different actions can also be perfo
 ```swift
 let help = Flag(longName: "help", shortName: "h")
 let foo = Command(name: "foo", parsers: [help])
-help.parsed = { _, path in
+help.parsed = { path in
     switch path.last {
         case let cmd as Command where cmd === foo:
             print("foo help")

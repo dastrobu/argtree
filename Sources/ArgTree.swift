@@ -116,7 +116,7 @@ public class ArgTree: ParserNode {
                     rows.append(["   ", argument, description])
                 })
             self.writeToOutStream(
-                "\(description)\n\(createTable(rows))")
+                "\(description)\n\(Help.createTable(rows))")
             helpPrinted()
         }
         // add help as first parse, to play together with the var arg parser

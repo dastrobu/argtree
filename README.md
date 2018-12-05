@@ -1,6 +1,6 @@
 # argtree
 
-[![Swift Version](https://img.shields.io/badge/swift-4.1-blue.svg)](https://swift.org) 
+[![Swift Version](https://img.shields.io/badge/swift-4.2-blue.svg)](https://swift.org) 
 ![Platform](https://img.shields.io/badge/platform-osx--64|linux--64-lightgrey.svg)
 [![Build Travis-CI Status](https://travis-ci.org/dastrobu/argtree.svg?branch=master)](https://travis-ci.org/dastrobu/argtree) 
 
@@ -343,7 +343,7 @@ Instead of defining separate Flag instances, different actions can also be perfo
 ```swift
 let help = Flag(longName: "help", shortName: "h")
 let foo = Command(name: "foo", parsers: [help])
-help.parsed = { _, path in
+help.parsed = { path in
     switch path.last {
         case let cmd as Command where cmd === foo:
             print("foo help")

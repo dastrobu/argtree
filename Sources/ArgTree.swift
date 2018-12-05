@@ -217,6 +217,7 @@ public extension ArgTree {
         self.parsers.insert(parsers, at: i)
     }
 
+    @discardableResult
     public func remove(at i: Int) -> Parser {
         return parsers.remove(at: i)
     }
@@ -225,6 +226,7 @@ public extension ArgTree {
         parsers.removeSubrange(bounds)
     }
 
+    @discardableResult
     public func removeFirst() -> Parser {
         return parsers.removeFirst()
     }

@@ -14,13 +14,13 @@ open class Command: ValueParser<Bool>, ParserNode {
     /** callback invoked after all child parsers where invoked */
     public var afterChildrenParsed: OnParsed?
 
-    init(name: String,
-         aliases: [String] = [],
-         description: String = "",
-         stopToken: String? = "--",
-         parsed: OnParsed? = nil,
-         parsers: [Parser] = [],
-         afterChildrenParsed: OnParsed? = nil) {
+    public init(name: String,
+                aliases: [String] = [],
+                description: String = "",
+                stopToken: String? = "--",
+                parsed: OnParsed? = nil,
+                parsers: [Parser] = [],
+                afterChildrenParsed: OnParsed? = nil) {
 
         self.afterChildrenParsed = afterChildrenParsed
         super.init(aliases: [name] + aliases, description: description, stopToken: stopToken, parsed: { _, path in

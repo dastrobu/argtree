@@ -88,10 +88,10 @@ final class ArgTreeTests: XCTestCase {
         let tokensConsumed = try? argTree.parse(arguments: ["foo", "--help"])
         XCTAssertEqual(tokensConsumed, 2)
         let expected = """
-            usage
-                --help, -h print this help
-                --bar, -b  a bar flag
-            """
+                       usage
+                           --help, -h print this help
+                           --bar, -b  a bar flag
+                       """
         XCTAssertEqualTrimmingWhiteSpace(out, expected)
         XCTAssert(helpPrinted)
     }
@@ -112,9 +112,38 @@ final class ArgTreeTests: XCTestCase {
         let tokensConsumed = try? argTree.parse(arguments: ["foo", "--help"])
         XCTAssertEqual(tokensConsumed, 2)
         let expected = """
-            usage
-                --help, -h print this help
-            """
+                       usage
+                           --help, -h print this help
+                       """
+        XCTAssertEqualTrimmingWhiteSpace(out, expected)
+        XCTAssert(helpPrinted)
+    }
+
+    func testGeneratedHelpWithMultilineText() {
+        var helpPrinted = false
+        let argTree = ArgTree(description: "usage") {
+            helpPrinted = true
+        }
+        argTree.append(Flag(longName: "bar", shortName: "b", description:
+        """
+        bar is a nice flag
+        baz also
+        """, parsed: { _ in }))
+
+        var out = ""
+        argTree.writeToOutStream = { s in
+            print(s, to: &out)
+        }
+
+        argTree.defaultAction = nil
+        let tokensConsumed = try? argTree.parse(arguments: ["foo", "--help"])
+        XCTAssertEqual(tokensConsumed, 2)
+        let expected = """
+                       usage
+                           --help, -h print this help
+                           --bar, -b  bar is a nice flag
+                                      baz also
+                       """
         XCTAssertEqualTrimmingWhiteSpace(out, expected)
         XCTAssert(helpPrinted)
     }
@@ -171,17 +200,18 @@ final class ArgTreeTests: XCTestCase {
 
         try! argTree.parse(arguments: ["foo", "-h"])
         let expected = """
-            foo
-                --verbose, -v print verbose output
-                --help, -h    print this help
-            """
+                       foo
+                           --verbose, -v print verbose output
+                           --help, -h    print this help
+                       """
         XCTAssertEqualTrimmingWhiteSpace(out, expected)
     }
 
-#if !os(macOS)
+    #if !os(macOS)
     static var allTests = [
         ("testGeneratedHelp", testGeneratedHelp),
         ("testGeneratedHelpIgnoringFlagWithoutDescription", testGeneratedHelpIgnoringFlagWithoutDescription),
+        ("testGeneratedHelpWithMultilineText", testGeneratedHelpWithMultilineText),
         ("testHelpLongFlag", testHelpLongFlag),
         ("testHelpShortFlag", testHelpShortFlag),
         ("testReorderingFlags", testReorderingFlags),
@@ -190,5 +220,5 @@ final class ArgTreeTests: XCTestCase {
         ("testSimpleDemo", testSimpleDemo),
         ("testVarArgsExample", testVarArgsExample),
     ]
-#endif
+    #endif
 }

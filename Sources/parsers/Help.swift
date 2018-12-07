@@ -5,30 +5,58 @@ public class Help: Flag {
 
     /** create a simple ascii table */
     public static func createTable(_ rows: [[String]]) -> String {
-        var colMaxCount: [Int] = []
+        var colCount = 0
+        var colWidths: [Int] = []
+        // number of lines per row
+        var rowLines: [Int] = Array(repeating: 0, count: rows.count)
         // determine the widths of the columns
-        rows.forEach { row in
-            row.enumerated().forEach { i, col in
-                if colMaxCount.count <= i {
-                    colMaxCount.append(col.count)
+        rows.enumerated().forEach { i, cols in
+            colCount = max(colCount, cols.count)
+            cols.enumerated().forEach { j, col in
+                let lines = String(col).split(separator: "\n")
+                rowLines[i] = max(rowLines[i], lines.count)
+                let colCount = lines.map {
+                    $0.count
+                }.max() ?? 0
+                if colWidths.count <= j {
+                    colWidths.append(colCount)
                 }
-                colMaxCount[i] = max(colMaxCount[i], col.count)
+                colWidths[j] = max(colWidths[j], col.count)
             }
         }
 
         // set the last col count to zero, to avoid padding the last col
-        if colMaxCount.popLast() != nil {
-            colMaxCount.append(0)
+        if colWidths.popLast() != nil {
+            colWidths.append(0)
+        }
+
+        // compute rows that account for multiline rows
+        var adjustedRows: [[String]] = []
+        for i in 0..<rows.count {
+            for _ in 0..<rowLines[i] {
+                adjustedRows.append(Array<String>(repeating: "", count: colCount))
+            }
+        }
+
+        var i = 0
+        rows.enumerated().forEach { j, cols in
+            cols.enumerated().forEach { l, col in
+                let lines = String(col).split(separator: "\n")
+                lines.enumerated().forEach { k, line in
+                    adjustedRows[i + k][l] = String(line)
+                }
+            }
+            i += rowLines[j]
         }
 
         // format the columns
-        let r = rows.map { row in
+        let r = adjustedRows.map { row in
             return row
                 .enumerated()
                 .map({ i, col in
-                    if col.count < colMaxCount[i] {
+                    if col.count < colWidths[i] {
                         // right pad texts with whitespace
-                        return col + String(repeating: " ", count: colMaxCount[i] - col.count)
+                        return col + String(repeating: " ", count: colWidths[i] - col.count)
                     }
                     return col
                 }).joined(separator: " ")

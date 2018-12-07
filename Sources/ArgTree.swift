@@ -110,8 +110,7 @@ public class ArgTree: ParserNode {
         let printHelp: () -> Void = {
             [unowned self] in
             var rows: [[String]] = []
-            self.parsers
-                .flatMap({ $0.description })
+            self.flatMap({ $0.description })
                 .forEach({ (argument: String, description: String) in
                     rows.append(["   ", argument, description])
                 })

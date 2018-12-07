@@ -4,8 +4,10 @@ import XCTest
 final class VarArgsTests: XCTestCase {
 
     func testUnexpectedVarArgsHandlingNotThrowing() {
+        let command = Command(name: "bar")
+        command.defaultAction = {}
         let tokensConsumed = try! ArgTree(parsers: [
-            Command(name: "bar"),
+            command,
             UnexpectedArgHandler(),
         ]).parse(arguments: ["foo", "bar"])
         XCTAssertEqual(tokensConsumed, 2)
@@ -24,12 +26,10 @@ final class VarArgsTests: XCTestCase {
     func testUnexpectedVarArgsHandlingThrowing() {
         do {
             try ArgTree(parsers: [
-                Command(name: "bar"),
-                UnexpectedArgHandler(),
+                Command(name: "bar", parsers: [UnexpectedArgHandler()]),
             ]).parse(arguments: ["foo", "bar", "baz"])
         } catch ArgParseError.unexpectedArg(argument: "baz", atIndex: 2) {
             return
-
         } catch {
             XCTFail("unexpected error \(error)")
         }
@@ -38,9 +38,7 @@ final class VarArgsTests: XCTestCase {
 
     func testStopToken() {
         let tokensConsumed = try! ArgTree(parsers: [
-            Command(name: "bar"),
-            UnexpectedArgHandler(),
-            VarArgs(),
+            Command(name: "bar", parsers: [UnexpectedArgHandler(), VarArgs()]),
         ]).parse(arguments: ["foo", "bar", "--", "baz"])
         XCTAssertEqual(tokensConsumed, 4)
     }

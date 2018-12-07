@@ -34,7 +34,7 @@ public class Help: Flag {
         var adjustedRows: [[String]] = []
         for i in 0..<rows.count {
             for _ in 0..<rowLines[i] {
-                adjustedRows.append(Array<String>(repeating: "", count: colCount))
+                adjustedRows.append(Array(repeating: "", count: colCount))
             }
         }
 

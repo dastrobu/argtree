@@ -131,7 +131,7 @@ public class IntOption: OptionParser<Int> {
             multiAllowed: multiAllowed,
             stopToken: stopToken,
             parsed: parsed)
-        valueConverter = { value, i in
+        valueConverter = { [unowned self] value, i in
             if let value = Int(value) {
                 return value
             }
@@ -162,7 +162,7 @@ public class DoubleOption: OptionParser<Double> {
             multiAllowed: multiAllowed,
             stopToken: stopToken,
             parsed: parsed)
-        valueConverter = { value, i in
+        valueConverter = { [unowned self] value, i in
             if let value = Double(value) {
                 return value
             }

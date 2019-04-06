@@ -173,12 +173,12 @@ internal func parseTree(arguments: [String],
 
 /** extension to support collection protocols for parsers */
 public extension ArgTree {
-    public var indices: CountableRange<Int> {
+    var indices: CountableRange<Int> {
         return parsers.indices
 
     }
 
-    public subscript(bounds: Range<Int>) -> ArraySlice<Parser> {
+    subscript(bounds: Range<Int>) -> ArraySlice<Parser> {
         get {
             return parsers[bounds]
         }
@@ -187,7 +187,7 @@ public extension ArgTree {
         }
     }
 
-    public subscript(position: Int) -> Parser {
+    subscript(position: Int) -> Parser {
         get {
             return parsers[position]
         }
@@ -196,45 +196,45 @@ public extension ArgTree {
         }
     }
 
-    public var startIndex: Int {
+    var startIndex: Int {
         return parsers.startIndex
     }
 
-    public var endIndex: Int {
+    var endIndex: Int {
         return parsers.endIndex
     }
 
-    public func append(_ parser: Parser) {
+    func append(_ parser: Parser) {
         parsers.append(parser)
     }
 
-    public func insert(_ parser: Parser, at i: Int) {
+    func insert(_ parser: Parser, at i: Int) {
         parsers.insert(parser, at: i)
     }
 
-    public func insert(contentsOf parsers: Parser, at i: Int) {
+    func insert(contentsOf parsers: Parser, at i: Int) {
         self.parsers.insert(parsers, at: i)
     }
 
     @discardableResult
-    public func remove(at i: Int) -> Parser {
+    func remove(at i: Int) -> Parser {
         return parsers.remove(at: i)
     }
 
-    public func removeSubrange(_ bounds: Range<Int>) {
+    func removeSubrange(_ bounds: Range<Int>) {
         parsers.removeSubrange(bounds)
     }
 
     @discardableResult
-    public func removeFirst() -> Parser {
+    func removeFirst() -> Parser {
         return parsers.removeFirst()
     }
 
-    public func removeFirst(_ n: Int) {
+    func removeFirst(_ n: Int) {
         parsers.removeFirst(n)
     }
 
-    public func removeAll(keepingCapacity keepCapacity: Bool = false) {
+    func removeAll(keepingCapacity keepCapacity: Bool = false) {
         parsers.removeAll()
     }
 

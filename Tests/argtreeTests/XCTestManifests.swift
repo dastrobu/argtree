@@ -1,16 +1,16 @@
 import XCTest
 import Logging
 
-var logHandler: LogHandler? = nil
+fileprivate var loggerInitialized = false
 
 func setUpLogger() {
-    if logHandler == nil {
+    if !loggerInitialized {
         LoggingSystem.bootstrap({ label in
-            var newLogHandler = StreamLogHandler.standardError(label: label)
-            newLogHandler.logLevel = .trace
-            logHandler = newLogHandler
-            return newLogHandler
+            var logHandler = StreamLogHandler.standardError(label: label)
+            logHandler.logLevel = .debug
+            return logHandler
         })
+        loggerInitialized = true
     }
 }
 

@@ -3,7 +3,7 @@ import Darwin
 #elseif os(Linux)
 import Glibc
 #endif
-import LoggerAPI
+import Logging
 
 public enum CommandParseError: Error {
     case commandAllowedOnlyOnce(command: Command, atIndex: Int)
@@ -71,7 +71,7 @@ open class Command: ValueParser<Bool>, ParserNode {
             helpPrinted()
         }
         // add help as first parse, to play together with the var arg parser
-        Log.debug("creating generated help flag as first parser")
+        logger.debug("creating generated help flag as first parser")
         insert(Help(longName: "help", shortName: "h", parsed: { _ in printHelp() }), at: 0)
         defaultAction = printHelp
     }

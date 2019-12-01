@@ -12,14 +12,14 @@ let package = Package(
             ]),
     ],
     dependencies: [
-        .package(url: "https://github.com/IBM-Swift/LoggerAPI.git", from: "1.8.0"),
-        .package(url: "https://github.com/IBM-Swift/HeliumLogger.git", from: "1.8.0")
+        .package(url: "https://github.com/apple/swift-log.git", from: "1.0.0"),
+        .package(url: "https://github.com/IBM-Swift/HeliumLogger.git", from: "1.9.0")
     ],
     targets: [
         .target(
             name: "argtree",
             dependencies: [
-                "LoggerAPI",
+                "Logging",
             ],
             path: "Sources"
         ),

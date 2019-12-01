@@ -1,10 +1,11 @@
 import XCTest
-import LoggerAPI
+import Logging
 import HeliumLogger
 
 #if !os(macOS)
 public func allTests() -> [XCTestCaseEntry] {
     Log.logger = HeliumLogger(.debug)
+    LoggingSystem.bootstrap(logger.makeLogHandler)
     return [
         testCase(ArgTreeTests.allTests),
         testCase(CommandTests.allTests),

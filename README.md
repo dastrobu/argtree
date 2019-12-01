@@ -639,3 +639,6 @@ argTree
 if `-v` should also be supported on the global level. 
 For an example on path specific actions see [Semi Global Flags (or Options)](#semi-global-flags-or-options).
 
+## Docs
+
+Read the generated [docs](https://dastrobu.github.io/argtree/).

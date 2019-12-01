@@ -1,5 +1,3 @@
-import HeliumLogger
-import Logging
 import XCTest
 @testable import argtree
 

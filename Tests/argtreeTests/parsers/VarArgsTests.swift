@@ -2,6 +2,10 @@ import XCTest
 @testable import argtree
 
 final class VarArgsTests: XCTestCase {
+    override func setUp() {
+        super.setUp()
+        setUpLogger();
+    }
 
     func testUnexpectedVarArgsHandlingNotThrowing() {
         let command = Command(name: "bar")

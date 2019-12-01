@@ -2,6 +2,10 @@ import XCTest
 @testable import argtree
 
 final class OptionTests: XCTestCase {
+    override func setUp() {
+        super.setUp()
+        setUpLogger();
+    }
 
     func testShortName() {
         var parsedValue = ""

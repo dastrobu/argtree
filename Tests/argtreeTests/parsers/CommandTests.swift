@@ -2,6 +2,10 @@ import XCTest
 @testable import argtree
 
 final class CommandTests: XCTestCase {
+    override func setUp() {
+        super.setUp()
+        setUpLogger();
+    }
 
     func testCommandParsing() {
         var parsed = false

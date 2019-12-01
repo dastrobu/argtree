@@ -3,6 +3,11 @@ import XCTest
 
 final class MultiFlagTests: XCTestCase {
 
+    override func setUp() {
+        super.setUp()
+        setUpLogger();
+    }
+
     func testFlagParsing() {
         var xPath: [ParsePathSegment] = []
         var yPath: [ParsePathSegment] = []

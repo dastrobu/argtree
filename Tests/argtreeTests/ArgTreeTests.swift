@@ -1,7 +1,14 @@
+import HeliumLogger
+import Logging
 import XCTest
 @testable import argtree
 
 final class ArgTreeTests: XCTestCase {
+
+    override func setUp() {
+        super.setUp()
+        setUpLogger();
+    }
 
     func testShowUsageAsDefault() {
         var helpPrinted = false

@@ -1,5 +1,3 @@
-import Logging
-
 public enum ArgParseError: Error {
     case unexpectedArg(argument: String, atIndex: Int)
 }

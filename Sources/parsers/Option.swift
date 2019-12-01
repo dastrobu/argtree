@@ -1,5 +1,3 @@
-import Logging
-
 public enum OptionParseError<T>: Error {
     case optionAllowedOnlyOnce(option: OptionParser<T>, atIndex: Int)
     case missingValueForOption(option: OptionParser<T>, atIndex: Int, key: String)

@@ -3,7 +3,6 @@ import Darwin
 #elseif os(Linux)
 import Glibc
 #endif
-import Logging
 
 public enum CommandParseError: Error {
     case commandAllowedOnlyOnce(command: Command, atIndex: Int)

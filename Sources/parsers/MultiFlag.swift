@@ -1,5 +1,3 @@
-import Logging
-
 /** parser for mult flags */
 public class MultiFlag: Parser, ParserNode, ParsePathSegment {
 

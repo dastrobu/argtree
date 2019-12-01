@@ -1,5 +1,3 @@
-import Logging
-
 /**
  * callback after a value was parsed
  *

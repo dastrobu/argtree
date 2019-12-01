@@ -1,5 +1,3 @@
-import Logging
-
 public enum FlagParseError: Error {
     case flagAllowedOnlyOnce(flag: Flag, atIndex: Int)
     case unexpectedFlag(flag: String, atIndex: Int)

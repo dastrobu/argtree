@@ -22,10 +22,7 @@ public typealias OnValueParsed<T> = ((_ value: T, _ path: [ParsePathSegment]) ->
 /**
  * Parser base class for arbitrary argument parses, such as flags, key-value options or commands
  */
-open class ValueParser<T>:
-    Parser,
-    ParsePathSegment,
-    CustomDebugStringConvertible {
+open class ValueParser<T>: Parser, ParsePathSegment, CustomDebugStringConvertible {
 
     /** token after which all arguments will be treated as var args, instead of parsing them as e.g. flags */
     public var stopToken: String?

@@ -16,7 +16,7 @@ func setUpLogger() {
 
 #if !os(macOS)
 public func allTests() -> [XCTestCaseEntry] {
-    [
+    return [
         testCase(ArgTreeTests.allTests),
         testCase(CommandTests.allTests),
         testCase(FlagTests.allTests),

@@ -26,7 +26,7 @@ public class MultiFlag: Parser, ParserNode, ParsePathSegment {
         }
         let prefixString = String(shortPrefix)
         if arg.starts(with: prefixString) {
-            if let j: String.Index = arg.index(of: shortPrefix) {
+            if let j: String.Index = arg.firstIndex(of: shortPrefix) {
                 // create full flags
                 let flags: [String] = arg.suffix(from: arg.index(after: j)).map({
                     prefixString + String($0)

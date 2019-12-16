@@ -51,7 +51,7 @@ open class OptionParser<T>: ValueParser<T> {
                 return 2
             } else if arg.starts(with: alias + "=") {
                 try checkMultiOption(arguments: arguments, atIndex: i, path: path)
-                let value = arg.suffix(from: arg.index(after: arg.index(of: "=")!))
+                let value = arg.suffix(from: arg.index(after: arg.firstIndex(of: "=")!))
                 try parseOption(alias, value: String(value), atIndex: i, path: path)
                 return 1
             }

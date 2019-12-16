@@ -1,0 +1,2 @@
+module: argtree
+swift_build_tool: spm

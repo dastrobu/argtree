@@ -1,7 +1,7 @@
 import XCTest
 import Logging
 
-fileprivate var loggerInitialized = false
+private var loggerInitialized = false
 
 func setUpLogger() {
     if !loggerInitialized {

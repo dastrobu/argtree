@@ -4,7 +4,7 @@ import XCTest
 final class OptionTests: XCTestCase {
     override func setUp() {
         super.setUp()
-        setUpLogger();
+        setUpLogger()
     }
 
     func testShortName() {

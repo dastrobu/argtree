@@ -5,7 +5,7 @@ final class MultiFlagTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        setUpLogger();
+        setUpLogger()
     }
 
     func testFlagParsing() {

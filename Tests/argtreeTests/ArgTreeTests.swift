@@ -5,7 +5,7 @@ final class ArgTreeTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        setUpLogger();
+        setUpLogger()
     }
 
     func testShowUsageAsDefault() {

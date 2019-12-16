@@ -4,7 +4,7 @@ import XCTest
 final class VarArgsTests: XCTestCase {
     override func setUp() {
         super.setUp()
-        setUpLogger();
+        setUpLogger()
     }
 
     func testUnexpectedVarArgsHandlingNotThrowing() {

@@ -4,7 +4,7 @@ import XCTest
 final class FlagTests: XCTestCase {
     override func setUp() {
         super.setUp()
-        setUpLogger();
+        setUpLogger()
     }
 
     func testFlagParsing() {

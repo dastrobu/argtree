@@ -1,5 +1,3 @@
-import LoggerAPI
-
 /** parser for mult flags */
 public class MultiFlag: Parser, ParserNode, ParsePathSegment {
 
@@ -23,12 +21,12 @@ public class MultiFlag: Parser, ParserNode, ParsePathSegment {
     public func parse(arguments: [String], atIndex i: Int, path: [ParsePathSegment]) throws -> Int {
         let arg = arguments[i]
         if arg == stopToken {
-            Log.debug("stopping parsing on stopToken '\(arg)'")
+            logger.debug("stopping parsing on stopToken '\(arg)'")
             return 0
         }
         let prefixString = String(shortPrefix)
         if arg.starts(with: prefixString) {
-            if let j: String.Index = arg.index(of: shortPrefix) {
+            if let j: String.Index = arg.firstIndex(of: shortPrefix) {
                 // create full flags
                 let flags: [String] = arg.suffix(from: arg.index(after: j)).map({
                     prefixString + String($0)
@@ -55,19 +53,22 @@ public class MultiFlag: Parser, ParserNode, ParsePathSegment {
 #endif
                 // check if all flags are valid flags, do not treat this as multi flag otherwise
                 if matched.count == flags.count {
-                    Log.debug("handling '\(arg)' as multi flag, generated: \(flags)")
+                    logger.debug("handling '\(arg)' as multi flag, generated: \(flags)")
                     try matched.forEach { parser, flag in
                         _ = try parser.parse(arguments: arguments[..<i] + [flag], atIndex: i, path: path + [self])
                     }
                     return 1
                 } else {
-                    Log.debug("'\(arg)' is not a valid multi flag since not all generated flags \(flags) "
-                        + "can be parsed as individual flags")
+                    logger.debug(
+                        """
+                        '\(arg)' is not a valid multi flag since not all generated flags \(flags
+                        ) can be parsed as individual flags
+                        """)
                 }
             }
         }
         // parse flag normally
-        Log.debug("trying to parse '\(arg)' as normal flag ")
+        logger.debug("trying to parse '\(arg)' as normal flag ")
         for parser in parsers {
             let tokensConsumed = try parser.parse(arguments: arguments, atIndex: i, path: path + [self])
             if tokensConsumed > 0 {

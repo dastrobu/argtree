@@ -1,4 +1,4 @@
-// swift-tools-version:4.0
+// swift-tools-version:5.0
 
 import PackageDescription
 
@@ -12,14 +12,13 @@ let package = Package(
             ]),
     ],
     dependencies: [
-        .package(url: "https://github.com/IBM-Swift/LoggerAPI.git", from: "1.8.0"),
-        .package(url: "https://github.com/IBM-Swift/HeliumLogger.git", from: "1.8.0")
+        .package(url: "https://github.com/apple/swift-log.git", from: "1.2.0"),
     ],
     targets: [
         .target(
             name: "argtree",
             dependencies: [
-                "LoggerAPI",
+                "Logging",
             ],
             path: "Sources"
         ),
@@ -27,7 +26,6 @@ let package = Package(
             name: "argtreeTests",
             dependencies: [
                 "argtree",
-                "HeliumLogger",
             ]),
     ]
 )

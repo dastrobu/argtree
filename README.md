@@ -527,13 +527,18 @@ do {
 To get a deeper understanding of why a certain argument is parsed or not parsed it can be very helpful to switch 
 on logging.
 
-Logging is done via the [LoggerAPI](https://github.com/IBM-Swift/LoggerAPI). So by default nothing is logged. 
-To activate logging, one must configure a logger. A simple logger is e.g. 
-[HeliumLogger](https://github.com/IBM-Swift/HeliumLogger) which can be employed in the following way.
+Logging is done via the [swift-log API](https://github.com/apple/swift-log). So by default nothing is logged. 
+To activate logging, one must configure a logger such as 
+([HeliumLogger](https://github.com/IBM-Swift/HeliumLogger)) or the `StreamLogHandler` 
+which can be employed in the following way.
 ```swift
-import LoggerAPI
-import HeliumLogger
-Log.logger = HeliumLogger(.debug)
+import Logging
+LoggingSystem.bootstrap({ label in
+    var logHandler = StreamLogHandler.standardError(label: label)
+    logHandler.logLevel = .trace/
+    logHandler = logHandler
+    return logHandler
+})
 
 let argTree = ArgTree()
 try! argtree.parse()

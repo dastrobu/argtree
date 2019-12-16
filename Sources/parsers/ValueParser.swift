@@ -1,5 +1,3 @@
-import LoggerAPI
-
 /**
  * callback after a value was parsed
  *
@@ -54,11 +52,11 @@ open class ValueParser<T>: Parser, ParsePathSegment, CustomDebugStringConvertibl
     public func parse(arguments: [String], atIndex i: Int, path: [ParsePathSegment]) throws -> Int {
         let arg = arguments[i]
         if arg == stopToken {
-            Log.debug("stopping parsing on stopToken '\(arg)'")
+            logger.debug("stopping parsing on stopToken '\(arg)'")
             return 0
         }
         for alias in aliases where arg == alias {
-            Log.debug("\(self) parsing argument \(arg)")
+            logger.debug("\(self) parsing argument \(arg)")
             if let converter = valueConverter {
                 let value = try converter(arg, i)
                 self.values.append(value)

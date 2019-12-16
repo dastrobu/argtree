@@ -1,5 +1,3 @@
-import LoggerAPI
-
 public enum ArgParseError: Error {
     case unexpectedArg(argument: String, atIndex: Int)
 }
@@ -22,12 +20,12 @@ public class VarArgs: Parser {
     public func parse(arguments: [String], atIndex i: Int, path: [ParsePathSegment]) -> Int {
         let arg: String = arguments[i]
         if arg == stopToken {
-            Log.debug("hit stopToken '\(arg)', consuming all remaining arguments as var args")
+            logger.debug("hit stopToken '\(arg)', consuming all remaining arguments as var args")
             // take all remaining arguments as var args
             values.append(contentsOf: arguments[(i + 1)...])
             return arguments.count - i
         } else {
-            Log.debug("consuming argument '\(arg)' as var arg")
+            logger.debug("consuming argument '\(arg)' as var arg")
             values.append(arg)
             return 1
         }
@@ -48,10 +46,10 @@ public class UnexpectedArgHandler: Parser {
     public func parse(arguments: [String], atIndex i: Int, path: [ParsePathSegment]) throws -> Int {
         let arg = arguments[i]
         if arg == stopToken {
-            Log.debug("stopping parsing on stopToken '\(arg)'")
+            logger.debug("stopping parsing on stopToken '\(arg)'")
             return 0
         }
-        Log.debug("handling unexpected argument '\(arg)' at index \(i)")
+        logger.debug("handling unexpected argument '\(arg)' at index \(i)")
         throw ArgParseError.unexpectedArg(argument: arg, atIndex: i)
     }
 }

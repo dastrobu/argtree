@@ -15,12 +15,22 @@ jobs:
       env: SWIFT_VERSION=5.0
     - os: linux
       env: SWIFT_VERSION=5.1
+    - os: linux
+      env: SWIFT_VERSION=5.2
+    - os: linux
+      env: SWIFT_VERSION=5.3
     - os: osx
       osx_image: xcode11.2
       env: SWIFT_VERSION=5.0
     - os: osx
       osx_image: xcode11.2
       env: SWIFT_VERSION=5.1
+    - os: osx
+      osx_image: xcode11.6
+      env: SWIFT_VERSION=5.2
+    - os: osx
+      osx_image: xcode12
+      env: SWIFT_VERSION=5.3
 
 
 before_install:

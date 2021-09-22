@@ -1,8 +1,8 @@
 # argtree
 
-[![Swift Version](https://img.shields.io/badge/swift-5.3-blue.svg)](https://swift.org) 
-![Platform](https://img.shields.io/badge/platform-osx--64|linux--64-lightgrey.svg)
-[![Build Travis-CI Status](https://travis-ci.org/dastrobu/argtree.svg?branch=master)](https://travis-ci.org/dastrobu/argtree) 
+[![Swift](https://img.shields.io/badge/Swift-5.5-blue?logo=swift&logoColor=white)](https://swift.org)
+![Platform](https://img.shields.io/badge/platform-macOS--64|linux--64-lightgrey.svg)
+[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fdastrobu%2Fargtree%2Fbadge&style=flat)](https://actions-badge.atrox.dev/dastrobu/argtree/goto)
 
 Command line argument parser package in Swift.
 

@@ -42,7 +42,7 @@ public class Flag: ValueParser<Bool> {
                 parsed(path)
             }
         })
-        valueConverter = { value, _ in
+        valueConverter = { _, _ in
             return true
         }
     }

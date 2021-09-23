@@ -52,7 +52,7 @@ open class Command: ValueParser<Bool>, ParserNode {
             }
         })
 
-        valueConverter = { value, _ in
+        valueConverter = { _, _ in
             return true
         }
 

@@ -12,7 +12,7 @@ let package = Package(
             ]),
     ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-log.git", from: "1.2.0"),
+        .package(url: "https://github.com/apple/swift-log.git", from: "1.4.2"),
     ],
     targets: [
         .target(

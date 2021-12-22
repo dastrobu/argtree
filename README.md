@@ -59,9 +59,14 @@ complicated parse trees for big command line programs.
 ## Installation
 
 ### Swift Package Manager
-    dependencies: [
-            .package(url: "https://github.com/dastrobu/argtree.git", from: "1.0.0"),
-        ],
+
+```swift
+let package = Package(
+        dependencies: [
+          .package(url: "https://github.com/dastrobu/argtree.git", from: "1.5.3"),
+        ]
+)
+```
         
 ### Dependencies
 At least `clang-3.6` is required. On linux one might need to install it explicitly.

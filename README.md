@@ -2,7 +2,7 @@
 
 [![Swift](https://img.shields.io/badge/Swift-5.5-blue?logo=swift&logoColor=white)](https://swift.org)
 ![Platform](https://img.shields.io/badge/platform-x86__64--apple|x86__64--linux-lightgrey.svg)
-[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fdastrobu%2Fargtree%2Fbadge&style=flat)](https://actions-badge.atrox.dev/dastrobu/argtree/goto)
+![Build](https://github.com/dastrobu/argtree/actions/workflows/ci.yaml/badge.svg)
 
 Command line argument parser package in Swift.
 

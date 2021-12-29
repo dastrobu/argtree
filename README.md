@@ -10,11 +10,9 @@ The basic idea is to define a tree structure of parsers which then parses all co
 This approach is very flexible and allows for quick and easy flag parsing for a simple scirpt, as well as 
 complicated parse trees for big command line programs.
 
-## Table of Contents
-
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-(generated with [DocToc](https://github.com/thlorenz/doctoc))
+## Table of Contents
 
 - [Installation](#installation)
   - [Swift Package Manager](#swift-package-manager)
@@ -52,6 +50,7 @@ complicated parse trees for big command line programs.
 - [Logging](#logging)
 - [Architecture](#architecture)
   - [Parse Path](#parse-path)
+- [Docs](#docs)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 (generated with [DocToc](https://github.com/thlorenz/doctoc))

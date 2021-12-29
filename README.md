@@ -53,7 +53,6 @@ complicated parse trees for big command line programs.
 - [Docs](#docs)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-(generated with [DocToc](https://github.com/thlorenz/doctoc))
 
 ## Installation
 

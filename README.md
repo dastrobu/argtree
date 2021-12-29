@@ -50,6 +50,7 @@ complicated parse trees for big command line programs.
 - [Logging](#logging)
 - [Architecture](#architecture)
   - [Parse Path](#parse-path)
+- [Docs](#docs)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 

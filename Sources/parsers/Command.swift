@@ -1,6 +1,6 @@
-#if os(macOS)
+#if canImport(Darwin)
 import Darwin
-#elseif os(Linux)
+#elseif canImport(Glibc)
 import Glibc
 #endif
 
@@ -41,9 +41,7 @@ open class Command: ValueParser<Bool>, ParserNode {
                 parsed: OnParsed? = nil,
                 parsers: [Parser] = [],
                 helpPrinted: @escaping () -> Void = {
-                #if os(macOS) || os(Linux)
                     exit(0)
-                #endif
                 },
                 afterChildrenParsed: OnParsed? = nil) {
 

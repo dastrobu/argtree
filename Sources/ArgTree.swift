@@ -1,6 +1,6 @@
-#if os(macOS)
+#if canImport(Darwin)
 import Darwin
-#elseif os(Linux)
+#elseif canImport(Glibc)
 import Glibc
 #endif
 
@@ -86,9 +86,7 @@ public class ArgTree: ParserNode {
     public convenience init(helpText: String,
                             parsers: [Parser] = [],
                             helpPrinted: @escaping () -> Void = {
-                            #if os(macOS) || os(Linux)
                                 exit(0)
-                            #endif
                             }) {
         self.init(parsers: parsers)
         let writeHelp: () -> Void = {
@@ -108,9 +106,7 @@ public class ArgTree: ParserNode {
     public convenience init(description: String,
                             parsers: [Parser] = [],
                             helpPrinted: @escaping () -> Void = {
-                            #if os(macOS) || os(Linux)
                                 exit(0)
-                            #endif
                             }) {
         self.init(parsers: parsers)
         let printHelp: () -> Void = {

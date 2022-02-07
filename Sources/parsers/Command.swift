@@ -1,6 +1,6 @@
-#if os(macOS)
+#if canImport(Darwin)
 import Darwin
-#elseif os(Linux)
+#elseif canImport(Glibc)
 import Glibc
 #endif
 

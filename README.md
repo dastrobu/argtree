@@ -7,7 +7,7 @@
 Command line argument parser package in Swift.
 
 The basic idea is to define a tree structure of parsers which then parses all command line arguments.
-This approach is very flexible and allows for quick and easy flag parsing for a simple scirpt, as well as 
+This approach is very flexible and allows for quick and easy flag parsing for a simple script, as well as 
 complicated parse trees for big command line programs.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->

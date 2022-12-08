@@ -61,7 +61,7 @@ complicated parse trees for big command line programs.
 ```swift
 let package = Package(
         dependencies: [
-          .package(url: "https://github.com/dastrobu/argtree.git", from: "1.5.4"),
+          .package(url: "https://github.com/dastrobu/argtree.git", from: "1.5.5"),
         ]
 )
 ```

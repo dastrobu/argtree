@@ -25,7 +25,7 @@ open class ValueParser<T>: Parser, ParsePathSegment, CustomDebugStringConvertibl
     /** token after which all arguments will be treated as var args, instead of parsing them as e.g. flags */
     public var stopToken: String?
 
-    public internal (set) var values: [T] = []
+    public internal(set) var values: [T] = []
 
     public let aliases: [String]
     public var valueConverter: ((String, Int) throws -> T)?

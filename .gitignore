@@ -9,3 +9,5 @@ DerivedData/
 
 build
 **.log
+
+.swiftpm/

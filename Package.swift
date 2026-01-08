@@ -1,4 +1,4 @@
-// swift-tools-version:5.0
+// swift-tools-version:5.7
 
 import PackageDescription
 
@@ -18,7 +18,7 @@ let package = Package(
         .target(
             name: "argtree",
             dependencies: [
-                "Logging",
+                .product(name: "Logging", package: "swift-log"),
             ],
             path: "Sources"
         ),

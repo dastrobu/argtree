@@ -1,7 +1,7 @@
 import XCTest
 @testable import argtree
 
-final class FlagTests: XCTestCase {
+final class FlagTests: XCTestCase, @unchecked Sendable {
     override func setUp() {
         super.setUp()
         setUpLogger()

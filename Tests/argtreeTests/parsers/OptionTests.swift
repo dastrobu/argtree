@@ -1,7 +1,7 @@
 import XCTest
 @testable import argtree
 
-final class OptionTests: XCTestCase {
+final class OptionTests: XCTestCase, @unchecked Sendable {
     override func setUp() {
         super.setUp()
         setUpLogger()

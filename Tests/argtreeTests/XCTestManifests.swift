@@ -1,17 +1,18 @@
 import XCTest
 import Logging
 
-private var loggerInitialized = false
-
-func setUpLogger() {
-    if !loggerInitialized {
+struct LoggerSetup {
+    static let setup: Void = {
         LoggingSystem.bootstrap({ label in
             var logHandler = StreamLogHandler.standardError(label: label)
             logHandler.logLevel = .debug
             return logHandler
         })
-        loggerInitialized = true
-    }
+    }()
+}
+
+func setUpLogger() {
+    _ = LoggerSetup.setup
 }
 
 #if os(Linux)

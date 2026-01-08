@@ -12,10 +12,6 @@ jobs:
     strategy:
       matrix:
         swift-version:
-          - "5.7"
-          - "5.8"
-          - "5.9"
-          - "5.10"
           - "6.0"
           - "6.1"
           - "6.2"
@@ -30,10 +26,6 @@ jobs:
     strategy:
       matrix:
         swift-version:
-          - "5.7"
-          - "5.8"
-          - "5.9"
-          - "5.10"
           - "6.0"
           - "6.1"
           - "6.2"

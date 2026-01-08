@@ -11,7 +11,7 @@ public enum CommandParseError: Error {
 /**
  * command parser for sub-commands in the command tree
  */
-open class Command: ValueParser<Bool>, ParserNode {
+open class Command: ValueParser<Bool>, ParserNode, @unchecked Sendable {
 
     fileprivate var parsers: [Parser] = []
 

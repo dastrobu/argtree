@@ -1,7 +1,7 @@
 /**
  * Flag to show a help text
  */
-public class Help: Flag {
+public class Help: Flag, @unchecked Sendable {
 
     /** create a simple ascii table */
     public static func createTable(_ rows: [[String]]) -> String {

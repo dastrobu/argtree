@@ -6,7 +6,7 @@ public enum OptionParseError<T>: Error {
     case unexpectedOption(option: String, atIndex: Int)
 }
 
-open class OptionParser<T>: ValueParser<T> {
+open class OptionParser<T>: ValueParser<T>, @unchecked Sendable {
     /** flag to indicate if passing an option more that once is an error */
     public var multiAllowed = false
 
@@ -85,7 +85,7 @@ open class OptionParser<T>: ValueParser<T> {
     }
 }
 
-public class Option: OptionParser<String> {
+public class Option: OptionParser<String>, @unchecked Sendable {
     public override init(longName: String? = nil,
                          shortName: String? = nil,
                          description: String? = nil,
@@ -112,7 +112,7 @@ public class Option: OptionParser<String> {
     }
 }
 
-public class IntOption: OptionParser<Int> {
+public class IntOption: OptionParser<Int>, @unchecked Sendable {
     public override init(longName: String? = nil,
                          shortName: String? = nil,
                          description: String? = nil,
@@ -143,7 +143,7 @@ public class IntOption: OptionParser<Int> {
     }
 }
 
-public class DoubleOption: OptionParser<Double> {
+public class DoubleOption: OptionParser<Double>, @unchecked Sendable {
     public override init(longName: String? = nil,
                          shortName: String? = nil,
                          description: String? = nil,

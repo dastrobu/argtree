@@ -11,3 +11,5 @@ build
 **.log
 
 .swiftpm/
+
+.DS_Store

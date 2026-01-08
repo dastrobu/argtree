@@ -213,7 +213,7 @@ final class ArgTreeTests: XCTestCase {
     }
 
     #if !os(macOS)
-    static var allTests = [
+    static let allTests = [
         ("testGeneratedHelp", testGeneratedHelp),
         ("testGeneratedHelpIgnoringFlagWithoutDescription", testGeneratedHelpIgnoringFlagWithoutDescription),
         ("testGeneratedHelpWithMultilineText", testGeneratedHelpWithMultilineText),

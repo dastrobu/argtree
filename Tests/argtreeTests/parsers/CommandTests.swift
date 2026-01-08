@@ -210,7 +210,7 @@ final class CommandTests: XCTestCase {
     }
 
     #if !os(macOS)
-    static var allTests = [
+    static let allTests = [
         ("testCommandNotParsableTwice", testCommandNotParsableTwice),
         ("testCommandNotParsingGlobalFlagAfterCommand", testCommandNotParsingGlobalFlagAfterCommand),
         ("testCommandParsing", testCommandParsing),

@@ -97,7 +97,7 @@ final class OptionTests: XCTestCase {
     }
 
 #if !os(macOS)
-    static var allTests = [
+    static let allTests = [
         ("testLongName", testLongName),
         ("testLongNameWithEquals", testLongNameWithEquals),
         ("testMultiValue", testMultiValue),

@@ -48,7 +48,7 @@ final class VarArgsTests: XCTestCase {
     }
 
 #if !os(macOS)
-    static var allTests = [
+    static let allTests = [
         ("testStopToken", testStopToken),
         ("testUnexpectedVarArgsHandlingNotThrowing", testUnexpectedVarArgsHandlingNotThrowing),
         ("testUnexpectedVarArgsHandlingNotThrowingWithSubVarArgs",

@@ -105,7 +105,7 @@ final class MultiFlagTests: XCTestCase {
     }
 
 #if !os(macOS)
-    static var allTests = [
+    static let allTests = [
         ("testFlagParsing", testFlagParsing),
         ("testFlagParsingForSingleFlag", testFlagParsingForSingleFlag),
         ("testFlagParsingStopToken", testFlagParsingStopToken),

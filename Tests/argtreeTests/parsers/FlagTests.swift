@@ -83,7 +83,7 @@ final class FlagTests: XCTestCase {
     }
 
 #if !os(macOS)
-    static var allTests = [
+    static let allTests = [
         ("testAccessingFlagLater", testAccessingFlagLater),
         ("testCustomPrefix", testCustomPrefix),
         ("testFlagNotParsableTwice", testFlagNotParsableTwice),

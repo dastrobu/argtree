@@ -124,8 +124,8 @@ final class CommandTests: XCTestCase {
         try! ArgTree(parsers: [help, foo]).parse(arguments: ["ignored", "foo", "-h"])
         XCTAssert(fooHelp)
 
-        help.values.removeAll()
-        foo.values.removeAll()
+        help.clearValues()
+        foo.clearValues()
         globalHelp = false
         fooHelp = false
         try! ArgTree(parsers: [help, foo]).parse(arguments: ["ignored", "-h"])

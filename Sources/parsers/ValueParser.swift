@@ -1,3 +1,5 @@
+import Foundation
+
 /**
  * callback after a value was parsed
  *
@@ -22,15 +24,75 @@ public typealias OnValueParsed<T> = ((_ value: T, _ path: [ParsePathSegment]) ->
  */
 open class ValueParser<T>: Parser, ParsePathSegment, CustomDebugStringConvertible, @unchecked Sendable {
 
-    /** token after which all arguments will be treated as var args, instead of parsing them as e.g. flags */
-    public var stopToken: String?
+    private let lock = NSLock()
 
-    public internal(set) var values: [T] = []
+    /** token after which all arguments will be treated as var args, instead of parsing them as e.g. flags */
+    public var stopToken: String? {
+        get {
+            lock.lock()
+            defer { lock.unlock() }
+            return _stopToken
+        }
+        set {
+            lock.lock()
+            defer { lock.unlock() }
+            _stopToken = newValue
+        }
+    }
+    private var _stopToken: String?
+
+    private var _values: [T] = []
+    public var values: [T] {
+        get {
+            lock.lock()
+            defer { lock.unlock() }
+            return _values
+        }
+    }
+
+    internal func appendValue(_ value: T) {
+        lock.lock()
+        defer { lock.unlock() }
+        _values.append(value)
+    }
+
+    internal func clearValues() {
+        lock.lock()
+        defer { lock.unlock() }
+        _values.removeAll()
+    }
 
     public let aliases: [String]
-    public var valueConverter: ((String, Int) throws -> T)?
+
+    public var valueConverter: ((String, Int) throws -> T)? {
+        get {
+            lock.lock()
+            defer { lock.unlock() }
+            return _valueConverter
+        }
+        set {
+            lock.lock()
+            defer { lock.unlock() }
+            _valueConverter = newValue
+        }
+    }
+    private var _valueConverter: ((String, Int) throws -> T)?
+
     private let argumentDescription: String?
-    public var parsed: OnValueParsed<T>?
+
+    public var parsed: OnValueParsed<T>? {
+        get {
+            lock.lock()
+            defer { lock.unlock() }
+            return _parsed
+        }
+        set {
+            lock.lock()
+            defer { lock.unlock() }
+            _parsed = newValue
+        }
+    }
+    private var _parsed: OnValueParsed<T>?
 
     /**
      * - Parameters:
@@ -45,22 +107,37 @@ open class ValueParser<T>: Parser, ParsePathSegment, CustomDebugStringConvertibl
                 parsed: OnValueParsed<T>? = nil) {
         self.aliases = aliases
         self.argumentDescription = description
-        self.parsed = parsed
-        self.stopToken = stopToken
+        self._parsed = parsed
+        self._stopToken = stopToken
     }
 
     public func parse(arguments: [String], atIndex i: Int, path: [ParsePathSegment]) throws -> Int {
         let arg = arguments[i]
-        if arg == stopToken {
+
+        lock.lock()
+        let currentStopToken = _stopToken
+        lock.unlock()
+
+        if arg == currentStopToken {
             logger.debug("stopping parsing on stopToken '\(arg)'")
             return 0
         }
         for alias in aliases where arg == alias {
             logger.debug("\(self) parsing argument \(arg)")
-            if let converter = valueConverter {
+
+            lock.lock()
+            let converter = _valueConverter
+            lock.unlock()
+
+            if let converter = converter {
                 let value = try converter(arg, i)
-                self.values.append(value)
-                if let parsed = parsed {
+
+                lock.lock()
+                self._values.append(value)
+                let callback = _parsed
+                lock.unlock()
+
+                if let parsed = callback {
                     parsed(value, path)
                 }
             }
@@ -85,8 +162,10 @@ open class ValueParser<T>: Parser, ParsePathSegment, CustomDebugStringConvertibl
      * - Returns: the parsed value, if exactly one value was parse, nil otherwise.
      */
     public var value: T? {
-        if values.count == 1 {
-            return values.first
+        lock.lock()
+        defer { lock.unlock() }
+        if _values.count == 1 {
+            return _values.first
         }
         return nil
     }

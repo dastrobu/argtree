@@ -72,7 +72,7 @@ open class OptionParser<T>: ValueParser<T>, @unchecked Sendable {
         logger.debug("parsing option '\(option)' at index \(i), value is '\(value)'")
         if let converter = valueConverter {
             let value = try converter(value, i)
-            self.values.append(value)
+            self.appendValue(value)
             if let parsed = parsed {
                 parsed(value, path)
             }

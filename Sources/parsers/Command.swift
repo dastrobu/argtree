@@ -1,3 +1,4 @@
+import Foundation
 #if canImport(Darwin)
 import Darwin
 #elseif canImport(Glibc)
@@ -13,17 +14,55 @@ public enum CommandParseError: Error {
  */
 open class Command: ValueParser<Bool>, ParserNode, @unchecked Sendable {
 
-    fileprivate var parsers: [Parser] = []
+    fileprivate let lock = NSLock()
+
+    fileprivate var _parsers: [Parser] = []
 
     /** delegate to write to an output stream, defaults to stdout. */
-    public var writeToOutStream: (_ s: String) -> Void = { s in
+    public var writeToOutStream: (_ s: String) -> Void {
+        get {
+            lock.lock()
+            defer { lock.unlock() }
+            return _writeToOutStream
+        }
+        set {
+            lock.lock()
+            defer { lock.unlock() }
+            _writeToOutStream = newValue
+        }
+    }
+    private var _writeToOutStream: (_ s: String) -> Void = { s in
         print(s)
     }
 
-    public var defaultAction: (() -> Void)?
+    public var defaultAction: (() -> Void)? {
+        get {
+            lock.lock()
+            defer { lock.unlock() }
+            return _defaultAction
+        }
+        set {
+            lock.lock()
+            defer { lock.unlock() }
+            _defaultAction = newValue
+        }
+    }
+    private var _defaultAction: (() -> Void)?
 
     /** callback invoked after all child parsers where invoked */
-    public var afterChildrenParsed: OnParsed?
+    public var afterChildrenParsed: OnParsed? {
+        get {
+            lock.lock()
+            defer { lock.unlock() }
+            return _afterChildrenParsed
+        }
+        set {
+            lock.lock()
+            defer { lock.unlock() }
+            _afterChildrenParsed = newValue
+        }
+    }
+    private var _afterChildrenParsed: OnParsed?
 
     /**
      * Create a Command.
@@ -45,7 +84,7 @@ open class Command: ValueParser<Bool>, ParserNode, @unchecked Sendable {
                 },
                 afterChildrenParsed: OnParsed? = nil) {
 
-        self.afterChildrenParsed = afterChildrenParsed
+        self._afterChildrenParsed = afterChildrenParsed
         super.init(aliases: [name] + aliases, description: description, stopToken: stopToken, parsed: { _, path in
             if let parsed = parsed {
                 parsed(path)
@@ -56,7 +95,7 @@ open class Command: ValueParser<Bool>, ParserNode, @unchecked Sendable {
             return true
         }
 
-        self.parsers = parsers
+        self._parsers = parsers
 
         let printHelp: () -> Void = {
             [unowned self] in
@@ -72,7 +111,7 @@ open class Command: ValueParser<Bool>, ParserNode, @unchecked Sendable {
         // add help as first parse, to play together with the var arg parser
         logger.debug("creating generated help flag as first parser")
         insert(Help(longName: "help", shortName: "h", parsed: { _ in printHelp() }), at: 0)
-        defaultAction = printHelp
+        _defaultAction = printHelp
     }
 
     open override func parse(arguments: [String], atIndex i: Int, path: [ParsePathSegment]) throws -> Int {
@@ -82,13 +121,20 @@ open class Command: ValueParser<Bool>, ParserNode, @unchecked Sendable {
                 // do not parse the same command twice
                 throw CommandParseError.commandAllowedOnlyOnce(command: self, atIndex: i)
             }
+
+            lock.lock()
+            let currentParsers = _parsers
+            lock.unlock()
+
             let tokensConsumedByChildren = try parseTree(arguments: arguments,
                 atIndex: i + tokensConsumed,
                 path: path + [self],
-                childParsers: parsers)
+                childParsers: currentParsers)
+
             if let afterChildrenParsed = self.afterChildrenParsed {
                 afterChildrenParsed(path)
             }
+
             if let defaultAction = defaultAction {
                 if tokensConsumedByChildren == 0 {
                     defaultAction()
@@ -108,67 +154,98 @@ open class Command: ValueParser<Bool>, ParserNode, @unchecked Sendable {
 /** extension to support collection protocols for parsers */
 public extension Command {
     var indices: CountableRange<Int> {
-        return parsers.indices
+        lock.lock()
+        defer { lock.unlock() }
+        return _parsers.indices
 
     }
 
     subscript(bounds: Range<Int>) -> ArraySlice<Parser> {
         get {
-            return parsers[bounds]
+            lock.lock()
+            defer { lock.unlock() }
+            return _parsers[bounds]
         }
         set(newValue) {
-            parsers[bounds] = newValue
+            lock.lock()
+            defer { lock.unlock() }
+            _parsers[bounds] = newValue
         }
     }
 
     subscript(position: Int) -> Parser {
         get {
-            return parsers[position]
+            lock.lock()
+            defer { lock.unlock() }
+            return _parsers[position]
         }
         set(newValue) {
-            parsers[position] = newValue
+            lock.lock()
+            defer { lock.unlock() }
+            _parsers[position] = newValue
         }
     }
 
     var startIndex: Int {
-        return parsers.startIndex
+        lock.lock()
+        defer { lock.unlock() }
+        return _parsers.startIndex
     }
 
     var endIndex: Int {
-        return parsers.endIndex
+        lock.lock()
+        defer { lock.unlock() }
+        return _parsers.endIndex
     }
 
     func append(_ parser: Parser) {
-        parsers.append(parser)
+        lock.lock()
+        defer { lock.unlock() }
+        _parsers.append(parser)
     }
 
     func insert(_ parser: Parser, at i: Int) {
-        parsers.insert(parser, at: i)
+        lock.lock()
+        defer { lock.unlock() }
+        _parsers.insert(parser, at: i)
     }
 
     func insert(contentsOf parsers: Parser, at i: Int) {
-        self.parsers.insert(parsers, at: i)
+        lock.lock()
+        defer { lock.unlock() }
+        self._parsers.insert(parsers, at: i)
     }
 
+    @discardableResult
     func remove(at i: Int) -> Parser {
-        return parsers.remove(at: i)
+        lock.lock()
+        defer { lock.unlock() }
+        return _parsers.remove(at: i)
     }
 
     func removeSubrange(_ bounds: Range<Int>) {
-        parsers.removeSubrange(bounds)
+        lock.lock()
+        defer { lock.unlock() }
+        _parsers.removeSubrange(bounds)
     }
 
     @discardableResult
     func removeFirst() -> Parser {
-        return parsers.removeFirst()
+        lock.lock()
+        defer { lock.unlock() }
+        return _parsers.removeFirst()
     }
 
     func removeFirst(_ n: Int) {
-        parsers.removeFirst(n)
+        lock.lock()
+        defer { lock.unlock() }
+        _parsers.removeFirst(n)
     }
 
     func removeAll(keepingCapacity keepCapacity: Bool = false) {
-        parsers.removeAll()
+        lock.lock()
+        defer { lock.unlock() }
+        _parsers.removeAll(keepingCapacity: keepCapacity)
     }
 
 }

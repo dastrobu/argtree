@@ -96,15 +96,5 @@ final class OptionTests: XCTestCase, @unchecked Sendable {
         XCTFail("no error")
     }
 
-#if !os(macOS)
-    static let allTests = [
-        ("testLongName", testLongName),
-        ("testLongNameWithEquals", testLongNameWithEquals),
-        ("testMultiValue", testMultiValue),
-        ("testShortName", testShortName),
-        ("testShortNameWithEquals", testShortNameWithEquals),
-        ("testStopToken", testStopToken),
-        ("testUnexpectedOptionHandling", testUnexpectedOptionHandling),
-    ]
-#endif
+
 }

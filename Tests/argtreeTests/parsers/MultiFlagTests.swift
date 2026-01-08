@@ -104,12 +104,5 @@ final class MultiFlagTests: XCTestCase, @unchecked Sendable {
         XCTAssertEqualTrimmingWhiteSpace(out, expected)
     }
 
-#if !os(macOS)
-    static let allTests = [
-        ("testFlagParsing", testFlagParsing),
-        ("testFlagParsingForSingleFlag", testFlagParsingForSingleFlag),
-        ("testFlagParsingStopToken", testFlagParsingStopToken),
-        ("testHelpText", testHelpText),
-    ]
-#endif
+
 }

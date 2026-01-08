@@ -14,17 +14,3 @@ struct LoggerSetup {
 func setUpLogger() {
     _ = LoggerSetup.setup
 }
-
-#if os(Linux)
-public func allTests() -> [XCTestCaseEntry] {
-    return [
-        testCase(ArgTreeTests.allTests),
-        testCase(CommandTests.allTests),
-        testCase(FlagTests.allTests),
-        testCase(MultiFlagTests.allTests),
-        testCase(OptionTests.allTests),
-        testCase(VarArgsTests.allTests),
-        testCase(ArgTreeTests.allTests),
-    ]
-}
-#endif

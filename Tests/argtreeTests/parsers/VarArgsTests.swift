@@ -47,13 +47,5 @@ final class VarArgsTests: XCTestCase, @unchecked Sendable {
         XCTAssertEqual(tokensConsumed, 4)
     }
 
-#if !os(macOS)
-    static let allTests = [
-        ("testStopToken", testStopToken),
-        ("testUnexpectedVarArgsHandlingNotThrowing", testUnexpectedVarArgsHandlingNotThrowing),
-        ("testUnexpectedVarArgsHandlingNotThrowingWithSubVarArgs",
-            testUnexpectedVarArgsHandlingNotThrowingWithSubVarArgs),
-        ("testUnexpectedVarArgsHandlingThrowing", testUnexpectedVarArgsHandlingThrowing),
-    ]
-#endif
+
 }

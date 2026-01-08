@@ -82,14 +82,5 @@ final class FlagTests: XCTestCase, @unchecked Sendable {
         XCTAssert(!verbose)
     }
 
-#if !os(macOS)
-    static let allTests = [
-        ("testAccessingFlagLater", testAccessingFlagLater),
-        ("testCustomPrefix", testCustomPrefix),
-        ("testFlagNotParsableTwice", testFlagNotParsableTwice),
-        ("testFlagParsing", testFlagParsing),
-        ("testFlagParsingTwice", testFlagParsingTwice),
-        ("testUnexpectedFlagHandling", testUnexpectedFlagHandling),
-    ]
-#endif
+
 }

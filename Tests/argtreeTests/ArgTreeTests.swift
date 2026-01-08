@@ -212,18 +212,5 @@ final class ArgTreeTests: XCTestCase, @unchecked Sendable {
         XCTAssertEqualTrimmingWhiteSpace(out, expected)
     }
 
-    #if !os(macOS)
-    static let allTests = [
-        ("testGeneratedHelp", testGeneratedHelp),
-        ("testGeneratedHelpIgnoringFlagWithoutDescription", testGeneratedHelpIgnoringFlagWithoutDescription),
-        ("testGeneratedHelpWithMultilineText", testGeneratedHelpWithMultilineText),
-        ("testHelpLongFlag", testHelpLongFlag),
-        ("testHelpShortFlag", testHelpShortFlag),
-        ("testReorderingFlags", testReorderingFlags),
-        ("testShowNothingAsDefault", testShowNothingAsDefault),
-        ("testShowUsageAsDefault", testShowUsageAsDefault),
-        ("testSimpleDemo", testSimpleDemo),
-        ("testVarArgsExample", testVarArgsExample),
-    ]
-    #endif
+
 }

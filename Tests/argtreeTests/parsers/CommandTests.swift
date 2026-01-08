@@ -209,20 +209,5 @@ final class CommandTests: XCTestCase, @unchecked Sendable {
         XCTAssert(helpPrinted)
     }
 
-    #if !os(macOS)
-    static let allTests = [
-        ("testCommandNotParsableTwice", testCommandNotParsableTwice),
-        ("testCommandNotParsingGlobalFlagAfterCommand", testCommandNotParsingGlobalFlagAfterCommand),
-        ("testCommandParsing", testCommandParsing),
-        ("testCommandParsingWithGlobalFlag", testCommandParsingWithGlobalFlag),
-        ("testCommandParsingWithGlobalFlagAfterCommand", testCommandParsingWithGlobalFlagAfterCommand),
-        ("testCommandParsingWithVarArgs", testCommandParsingWithVarArgs),
-        ("testCustomHelp", testCustomHelp),
-        ("testDefaultAction", testDefaultAction),
-        ("testShowDescriptionAsDefault", testShowDescriptionAsDefault),
-        ("testShowHelpTextAsDefault", testShowHelpTextAsDefault),
-        ("testShowNothingAsDefault", testShowNothingAsDefault),
-        ("testGeneratedHelp", testGeneratedHelp),
-    ]
-    #endif
+
 }

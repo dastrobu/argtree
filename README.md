@@ -671,4 +671,4 @@ For an example on path specific actions see [Semi Global Flags (or Options)](#se
 
 ## Docs
 
-Read the generated [docs](https://dastrobu.github.io/argtree/).
+Read the generated [docs](https://dastrobu.github.io/argtree/documentation/argtree/).

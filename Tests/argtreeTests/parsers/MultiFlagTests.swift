@@ -1,7 +1,7 @@
 import XCTest
 @testable import argtree
 
-final class MultiFlagTests: XCTestCase {
+final class MultiFlagTests: XCTestCase, @unchecked Sendable {
 
     override func setUp() {
         super.setUp()
@@ -104,12 +104,5 @@ final class MultiFlagTests: XCTestCase {
         XCTAssertEqualTrimmingWhiteSpace(out, expected)
     }
 
-#if !os(macOS)
-    static var allTests = [
-        ("testFlagParsing", testFlagParsing),
-        ("testFlagParsingForSingleFlag", testFlagParsingForSingleFlag),
-        ("testFlagParsingStopToken", testFlagParsingStopToken),
-        ("testHelpText", testHelpText),
-    ]
-#endif
+
 }

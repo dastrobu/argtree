@@ -1,7 +1,7 @@
 import XCTest
 @testable import argtree
 
-final class CommandTests: XCTestCase {
+final class CommandTests: XCTestCase, @unchecked Sendable {
     override func setUp() {
         super.setUp()
         setUpLogger()
@@ -124,8 +124,8 @@ final class CommandTests: XCTestCase {
         try! ArgTree(parsers: [help, foo]).parse(arguments: ["ignored", "foo", "-h"])
         XCTAssert(fooHelp)
 
-        help.values.removeAll()
-        foo.values.removeAll()
+        help.clearValues()
+        foo.clearValues()
         globalHelp = false
         fooHelp = false
         try! ArgTree(parsers: [help, foo]).parse(arguments: ["ignored", "-h"])
@@ -209,20 +209,5 @@ final class CommandTests: XCTestCase {
         XCTAssert(helpPrinted)
     }
 
-    #if !os(macOS)
-    static var allTests = [
-        ("testCommandNotParsableTwice", testCommandNotParsableTwice),
-        ("testCommandNotParsingGlobalFlagAfterCommand", testCommandNotParsingGlobalFlagAfterCommand),
-        ("testCommandParsing", testCommandParsing),
-        ("testCommandParsingWithGlobalFlag", testCommandParsingWithGlobalFlag),
-        ("testCommandParsingWithGlobalFlagAfterCommand", testCommandParsingWithGlobalFlagAfterCommand),
-        ("testCommandParsingWithVarArgs", testCommandParsingWithVarArgs),
-        ("testCustomHelp", testCustomHelp),
-        ("testDefaultAction", testDefaultAction),
-        ("testShowDescriptionAsDefault", testShowDescriptionAsDefault),
-        ("testShowHelpTextAsDefault", testShowHelpTextAsDefault),
-        ("testShowNothingAsDefault", testShowNothingAsDefault),
-        ("testGeneratedHelp", testGeneratedHelp),
-    ]
-    #endif
+
 }

@@ -1,7 +1,7 @@
 import XCTest
 @testable import argtree
 
-final class ArgTreeTests: XCTestCase {
+final class ArgTreeTests: XCTestCase, @unchecked Sendable {
 
     override func setUp() {
         super.setUp()
@@ -212,18 +212,5 @@ final class ArgTreeTests: XCTestCase {
         XCTAssertEqualTrimmingWhiteSpace(out, expected)
     }
 
-    #if !os(macOS)
-    static var allTests = [
-        ("testGeneratedHelp", testGeneratedHelp),
-        ("testGeneratedHelpIgnoringFlagWithoutDescription", testGeneratedHelpIgnoringFlagWithoutDescription),
-        ("testGeneratedHelpWithMultilineText", testGeneratedHelpWithMultilineText),
-        ("testHelpLongFlag", testHelpLongFlag),
-        ("testHelpShortFlag", testHelpShortFlag),
-        ("testReorderingFlags", testReorderingFlags),
-        ("testShowNothingAsDefault", testShowNothingAsDefault),
-        ("testShowUsageAsDefault", testShowUsageAsDefault),
-        ("testSimpleDemo", testSimpleDemo),
-        ("testVarArgsExample", testVarArgsExample),
-    ]
-    #endif
+
 }

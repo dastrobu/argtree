@@ -1,7 +1,7 @@
 import XCTest
 @testable import argtree
 
-final class VarArgsTests: XCTestCase {
+final class VarArgsTests: XCTestCase, @unchecked Sendable {
     override func setUp() {
         super.setUp()
         setUpLogger()
@@ -47,13 +47,5 @@ final class VarArgsTests: XCTestCase {
         XCTAssertEqual(tokensConsumed, 4)
     }
 
-#if !os(macOS)
-    static var allTests = [
-        ("testStopToken", testStopToken),
-        ("testUnexpectedVarArgsHandlingNotThrowing", testUnexpectedVarArgsHandlingNotThrowing),
-        ("testUnexpectedVarArgsHandlingNotThrowingWithSubVarArgs",
-            testUnexpectedVarArgsHandlingNotThrowingWithSubVarArgs),
-        ("testUnexpectedVarArgsHandlingThrowing", testUnexpectedVarArgsHandlingThrowing),
-    ]
-#endif
+
 }

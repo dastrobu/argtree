@@ -3,6 +3,7 @@ import Darwin
 #elseif canImport(Glibc)
 import Glibc
 #endif
+import Foundation
 
 import Logging
 
@@ -63,20 +64,46 @@ public protocol ParserNode: RandomAccessCollection, MutableCollection {
 /**
  * Parser that handles arguments from the command line.
  */
-public class ArgTree: ParserNode {
+public class ArgTree: ParserNode, @unchecked Sendable {
+
+    private let lock = NSLock()
 
     /** delegate to write to an output stream, defaults to stdout. */
-    public var writeToOutStream: (_ s: String) -> Void = { s in
+    public var writeToOutStream: (_ s: String) -> Void {
+        get {
+            lock.lock()
+            defer { lock.unlock() }
+            return _writeToOutStream
+        }
+        set {
+            lock.lock()
+            defer { lock.unlock() }
+            _writeToOutStream = newValue
+        }
+    }
+    private var _writeToOutStream: (_ s: String) -> Void = { s in
         print(s)
     }
 
     /** all child parsers to which parsing is delegated */
-    fileprivate var parsers: [Parser] = []
+    fileprivate var _parsers: [Parser] = []
 
-    public var defaultAction: (() -> Void)?
+    public var defaultAction: (() -> Void)? {
+        get {
+            lock.lock()
+            defer { lock.unlock() }
+            return _defaultAction
+        }
+        set {
+            lock.lock()
+            defer { lock.unlock() }
+            _defaultAction = newValue
+        }
+    }
+    private var _defaultAction: (() -> Void)?
 
     public init(parsers: [Parser] = []) {
-        self.parsers = parsers
+        self._parsers = parsers
     }
 
     /**
@@ -109,10 +136,26 @@ public class ArgTree: ParserNode {
                                 exit(0)
                             }) {
         self.init(parsers: parsers)
+
+        // This closure captures `self` which is a class.
+        // We need to be careful about thread safety inside the closure if it's called concurrently.
+        // The closure accesses `self.parsers` (via collection conformance or property?).
+        // `self.parsers` property is gone, but we have `_parsers` or extension methods.
+        // The closure uses `self.parsers` in the original code?
+        // Wait, `ParserNode` extension adds `parsers` computed property? NO.
+        // The original code used `self.parsers`. Since I removed `parsers` property, I should use `self` as a collection (it conforms to ParserNode -> Collection)
+        // or access `_parsers` if I can (fileprivate).
+        // Since the closure is inside `init`, it's in the same file.
+
         let printHelp: () -> Void = {
             [unowned self] in
             var rows: [[String]] = []
-            self.parsers
+
+            self.lock.lock()
+            let currentParsers = self._parsers
+            self.lock.unlock()
+
+            currentParsers
                 .flatMap({ $0.description })
                 .forEach({ (argument: String, description: String) in
                     rows.append(["   ", argument, description])
@@ -146,7 +189,12 @@ public class ArgTree: ParserNode {
             }
             return 0
         }
-        return try parseTree(arguments: arguments, atIndex: i, path: path, childParsers: parsers)
+
+        lock.lock()
+        let currentParsers = _parsers
+        lock.unlock()
+
+        return try parseTree(arguments: arguments, atIndex: i, path: path, childParsers: currentParsers)
     }
 
 }
@@ -177,68 +225,98 @@ internal func parseTree(arguments: [String],
 /** extension to support collection protocols for parsers */
 public extension ArgTree {
     var indices: CountableRange<Int> {
-        return parsers.indices
+        lock.lock()
+        defer { lock.unlock() }
+        return _parsers.indices
 
     }
 
     subscript(bounds: Range<Int>) -> ArraySlice<Parser> {
         get {
-            return parsers[bounds]
+            lock.lock()
+            defer { lock.unlock() }
+            return _parsers[bounds]
         }
         set(newValue) {
-            parsers[bounds] = newValue
+            lock.lock()
+            defer { lock.unlock() }
+            _parsers[bounds] = newValue
         }
     }
 
     subscript(position: Int) -> Parser {
         get {
-            return parsers[position]
+            lock.lock()
+            defer { lock.unlock() }
+            return _parsers[position]
         }
         set(newValue) {
-            parsers[position] = newValue
+            lock.lock()
+            defer { lock.unlock() }
+            _parsers[position] = newValue
         }
     }
 
     var startIndex: Int {
-        return parsers.startIndex
+        lock.lock()
+        defer { lock.unlock() }
+        return _parsers.startIndex
     }
 
     var endIndex: Int {
-        return parsers.endIndex
+        lock.lock()
+        defer { lock.unlock() }
+        return _parsers.endIndex
     }
 
     func append(_ parser: Parser) {
-        parsers.append(parser)
+        lock.lock()
+        defer { lock.unlock() }
+        _parsers.append(parser)
     }
 
     func insert(_ parser: Parser, at i: Int) {
-        parsers.insert(parser, at: i)
+        lock.lock()
+        defer { lock.unlock() }
+        _parsers.insert(parser, at: i)
     }
 
     func insert(contentsOf parsers: Parser, at i: Int) {
-        self.parsers.insert(parsers, at: i)
+        lock.lock()
+        defer { lock.unlock() }
+        self._parsers.insert(parsers, at: i)
     }
 
     @discardableResult
     func remove(at i: Int) -> Parser {
-        return parsers.remove(at: i)
+        lock.lock()
+        defer { lock.unlock() }
+        return _parsers.remove(at: i)
     }
 
     func removeSubrange(_ bounds: Range<Int>) {
-        parsers.removeSubrange(bounds)
+        lock.lock()
+        defer { lock.unlock() }
+        _parsers.removeSubrange(bounds)
     }
 
     @discardableResult
     func removeFirst() -> Parser {
-        return parsers.removeFirst()
+        lock.lock()
+        defer { lock.unlock() }
+        return _parsers.removeFirst()
     }
 
     func removeFirst(_ n: Int) {
-        parsers.removeFirst(n)
+        lock.lock()
+        defer { lock.unlock() }
+        _parsers.removeFirst(n)
     }
 
     func removeAll(keepingCapacity keepCapacity: Bool = false) {
-        parsers.removeAll()
+        lock.lock()
+        defer { lock.unlock() }
+        _parsers.removeAll(keepingCapacity: keepCapacity)
     }
 
 }

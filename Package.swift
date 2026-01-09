@@ -1,4 +1,4 @@
-// swift-tools-version:5.0
+// swift-tools-version:6.1
 
 import PackageDescription
 
@@ -12,13 +12,13 @@ let package = Package(
             ]),
     ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-log.git", from: "1.4.4"),
+        .package(url: "https://github.com/apple/swift-log.git", from: "1.8.0"),
     ],
     targets: [
         .target(
             name: "argtree",
             dependencies: [
-                "Logging",
+                .product(name: "Logging", package: "swift-log"),
             ],
             path: "Sources"
         ),

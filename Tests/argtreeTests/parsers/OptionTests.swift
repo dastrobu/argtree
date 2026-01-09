@@ -1,7 +1,7 @@
 import XCTest
 @testable import argtree
 
-final class OptionTests: XCTestCase {
+final class OptionTests: XCTestCase, @unchecked Sendable {
     override func setUp() {
         super.setUp()
         setUpLogger()
@@ -96,15 +96,5 @@ final class OptionTests: XCTestCase {
         XCTFail("no error")
     }
 
-#if !os(macOS)
-    static var allTests = [
-        ("testLongName", testLongName),
-        ("testLongNameWithEquals", testLongNameWithEquals),
-        ("testMultiValue", testMultiValue),
-        ("testShortName", testShortName),
-        ("testShortNameWithEquals", testShortNameWithEquals),
-        ("testStopToken", testStopToken),
-        ("testUnexpectedOptionHandling", testUnexpectedOptionHandling),
-    ]
-#endif
+
 }

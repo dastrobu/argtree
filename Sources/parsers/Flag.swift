@@ -6,7 +6,7 @@ public enum FlagParseError: Error {
 /**
  * Flags such as e.g. -v or --verbose
  */
-public class Flag: ValueParser<Bool> {
+public class Flag: ValueParser<Bool>, @unchecked Sendable {
 
     /** flag to indicate if passing a flag more that once is an error */
     public var multiAllowed = false

@@ -1,6 +1,6 @@
 # argtree
 
-[![Swift](https://img.shields.io/badge/Swift-5.7-blue?logo=swift&logoColor=white)](https://swift.org)
+[![Swift](https://img.shields.io/badge/Swift-6.2-blue?logo=swift&logoColor=white)](https://swift.org)
 ![Platform](https://img.shields.io/badge/platform-x86__64--apple|x86__64--linux-lightgrey.svg)
 ![Build](https://github.com/dastrobu/argtree/actions/workflows/ci.yaml/badge.svg)
 

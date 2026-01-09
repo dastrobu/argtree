@@ -1,7 +1,7 @@
 import XCTest
 @testable import argtree
 
-final class FlagTests: XCTestCase {
+final class FlagTests: XCTestCase, @unchecked Sendable {
     override func setUp() {
         super.setUp()
         setUpLogger()
@@ -71,25 +71,16 @@ final class FlagTests: XCTestCase {
         let verboseFlag = Flag(longName: "verbose", shortName: "v")
         let argTree: ArgTree = ArgTree(parsers: [verboseFlag])
 
-        verboseFlag.values.removeAll()
+        verboseFlag.clearValues()
         try! argTree.parse(arguments: ["foo", "-v"])
         var verbose = verboseFlag.values.first != nil
         XCTAssert(verbose)
 
-        verboseFlag.values.removeAll()
+        verboseFlag.clearValues()
         try! argTree.parse(arguments: ["foo"])
         verbose = verboseFlag.values.first != nil
         XCTAssert(!verbose)
     }
 
-#if !os(macOS)
-    static var allTests = [
-        ("testAccessingFlagLater", testAccessingFlagLater),
-        ("testCustomPrefix", testCustomPrefix),
-        ("testFlagNotParsableTwice", testFlagNotParsableTwice),
-        ("testFlagParsing", testFlagParsing),
-        ("testFlagParsingTwice", testFlagParsingTwice),
-        ("testUnexpectedFlagHandling", testUnexpectedFlagHandling),
-    ]
-#endif
+
 }

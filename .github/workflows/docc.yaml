@@ -25,8 +25,8 @@ jobs:
           --transform-for-static-hosting
       - name: generate theme-settings.json
         run: echo '' > theme-settings.json
-        working-directory: docs
+        working-directory: docs/argtree.doccarchive
       - uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
+          publish_dir: ./docs/argtree.doccarchive
